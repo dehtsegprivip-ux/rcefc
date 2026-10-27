@@ -156,20 +156,10 @@
       object-fit: contain;
     }
 
-    /* ========================================================
-       PANEL DE MONITOREO (FLEXBOX 50/50 - ALTURA FIJA 600px)
-       ======================================================== */
-    .panel-monitoreo {
-      display: flex;
-      gap: 20px;
+    /* SECCIÓN DEL MAPA A ANCHO COMPLETO ÓPTIMO */
+    .panel-mapa-unico {
       width: 100%;
       height: 600px;
-      margin: 30px 0;
-    }
-
-    .panel-mapa, .panel-tabla {
-      flex: 0 0 calc(50% - 10px);
-      height: 100%;
       background: rgba(5, 8, 10, 0.90);
       border: 2px solid var(--primary-color);
       border-radius: 10px;
@@ -177,6 +167,7 @@
       flex-direction: column;
       overflow: hidden;
       box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
+      margin: 30px 0;
     }
 
     .panel-titulo {
@@ -192,7 +183,7 @@
 
     #map { 
       width: 100%; 
-      flex: 1; /* Ocupa todo el alto disponible debajo del título del panel */
+      flex: 1; 
       border: none; 
       border-radius: 0;
       box-shadow: none; 
@@ -225,27 +216,14 @@
     footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
     .footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
 
-    /* ========================================================
-       RESPONSIVE PARA MÓVILES Y TABLETAS (< 900px)
-       ======================================================== */
+    /* RESPONSIVE MÓVIL PARA EL MAPA */
     @media (max-width: 900px) { 
       header { flex-direction: column; gap: 15px; text-align: center; }
       .logo-nav { font-size: 1rem; }
       
-      .panel-monitoreo {
-        flex-direction: column;
-        height: auto; /* Altura automática en vertical para apilar los elementos */
+      .panel-mapa-unico {
+        height: 450px; /* Altura perfecta y visible en celulares y tablets */
       }
-
-      .panel-mapa, .panel-tabla {
-        flex: 0 0 100%;
-        width: 100%;
-        height: 450px; /* Altura absoluta segura para que el mapa y la tabla no colapsen en teléfonos */
-      }
-      #map {
-    width: 100%;
-    height: 100%;
-  }
     }
   </style>
 </head>
@@ -282,26 +260,24 @@
 <main class="container">
   <!-- TÍTULO PRINCIPAL -->
   <section class="map-header">
-    <h1>🛰️ Panel de Monitoreo Operacional y Sismológico</h1>
-    <p>Visualización en tiempo real de integrantes (Mapa) y actividad sísmica (Gael Cloud).</p>
+    <h1>🛰️ Panel de Monitoreo Operacional</h1>
+    <p>Visualización en tiempo real de integrantes de la red.</p>
     <p>Haga Clic en marcadores azules en el mapa.</p>
   </section>
 
   <!-- BOTÓN WHATSAPP INDEPENDIENTE Y SEPARADO -->
   <div class="whatsapp-container-externo">
-    <a href="https://chat.whatsapp.com/Cf0QpVxOzdTDUNggHapdyU" target="_blank" class="whatsapp-btn-independiente" title="Unirse al grupo de WhatsApp">
+    <a href="https://chat.whatsapp.com/TU_ENLACE_AQUI" target="_blank" class="whatsapp-btn-independiente" title="Unirse al grupo de WhatsApp">
       <span>Unirse al Grupo WhatsApp</span>
       <img src="whatsapp.png" alt="Logo WhatsApp" class="whatsapp-logo-sm">
     </a>
   </div>
               
-  <!-- CONTENEDOR FLEXBOX: MAPA Y TABLA DE SISMOS -->
-  <section class="panel-monitoreo">
-    <!-- MAPA OPERACIONAL -->
-    <div class="panel-mapa">
-      <div class="panel-titulo">🗺️ Mapa Operacional de Integrantes</div>
-      <div id="map"></div>
-    </div>
+  <!-- MAPA OPERACIONAL A ANCHO COMPLETO -->
+  <section class="panel-mapa-unico">
+    <div class="panel-titulo">🗺️ Mapa Operacional de Integrantes</div>
+    <div id="map"></div>
+  </section>
 </main>
 
 <footer>
@@ -364,6 +340,22 @@
 </script>  
 
 <script>
+  // Funciones de utilidad y accesibilidad
+  let hablando = false;
+  function leerTexto() {
+    if (hablando) return;
+    const texto = document.body.innerText;
+    const speech = new SpeechSynthesisUtterance(texto);
+    speech.lang = "es-CL";
+    hablando = true;
+    speech.onend = () => hablando = false;
+    window.speechSynthesis.speak(speech);
+  }
+  function detenerLectura() {
+    window.speechSynthesis.cancel();
+    hablando = false;
+  }
+
   // Botón subir
   window.onscroll = function() {
     let boton = document.getElementById("btnSubir");
