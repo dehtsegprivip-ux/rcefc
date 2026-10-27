@@ -270,16 +270,21 @@
 
     /* RESPONSIVE MÓVIL */
     @media (max-width: 900px) { 
-      header { flex-direction: column; gap: 15px; text-align: center; }
-      .logo-nav { font-size: 1rem; }
+    /* Convierte la cuadrícula a una sola columna */  
       .panel-monitoreo {
         flex-direction: column;
-        height: auto;
+        height: auto; /* Permite que los dos paneles se posicionen debajo del otro */
       }
+    /* Le da una altura fija adecuada para pantallas de telefono */  
       .panel-mapa, .panel-tabla {
         flex: 0 0 100%;
-        height: 450px;
+        width: 100%;
+        height: 450px; /* Altura comoda para tocar y navegar en el telefono */
       }
+    /* Asegura que la capa del mapa ocupe todo el espacio disponible */
+      #map {
+        height: calc(100% - 41px);
+    }
     }
   </style>
 </head>
@@ -381,6 +386,11 @@
   
   // Inicialización del Mapa
   const map = L.map('map').setView([-33.45, -70.66], 4);
+
+  // Linea Responsiva
+  window.addEventListener('resize', function() {
+    map.invalidateSize();
+  });
 
   L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
     maxZoom: 20,
