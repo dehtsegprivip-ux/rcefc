@@ -198,39 +198,6 @@
       box-shadow: none; 
     }
 
-    /* TABLA DE SISMOS Y SCROLL */
-    .tabla-scroll-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-    }
-
-    .tabla-scroll-container table {
-      width: 100%;
-      border-collapse: collapse;
-      color: var(--text-color);
-      font-size: 0.85rem;
-    }
-
-    .tabla-scroll-container th,
-    .tabla-scroll-container td {
-      padding: 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 255, 65, 0.2);
-    }
-
-    .tabla-scroll-container th {
-      background: rgba(0, 255, 65, 0.15);
-      color: var(--primary-color);
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .tabla-scroll-container tr:hover {
-      background: rgba(0, 255, 65, 0.05);
-    }
-
     #btnSubir {
       backdrop-filter: blur(5px);
       position: fixed;
@@ -335,29 +302,6 @@
       <div class="panel-titulo">🗺️ Mapa Operacional de Integrantes</div>
       <div id="map"></div>
     </div>
-
-    <!-- TABLA DE SISMOS EN TIEMPO REAL -->
-    <div class="panel-tabla">
-      <div class="panel-titulo">📊 Últimos Sismos (Gael Cloud)</div>
-      <div class="tabla-scroll-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Fecha</th>
-              <th>Mag.</th>
-              <th>Prof.</th>
-              <th>Referencia Geográfica</th>
-            </tr>
-          </thead>
-          <tbody id="sismos-tbody">
-            <tr>
-              <td colspan="4" style="text-align:center; color: var(--text-muted);">Cargando sismos...</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </section>
 </main>
 
 <footer>
@@ -420,62 +364,6 @@
 </script>  
 
 <script>
-  // ==========================================
-  // LÓGICA DE SISMOS (GAEL CLOUD API + AJAX)
-  // ==========================================
-  function cargarSismos() {
-    const xhr = new XMLHttpRequest();
-    xhr.open("GET", "https://api.gael.cloud/general/public/sismos", true);
-    xhr.onreadystatechange = function () {
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          try {
-            const sismos = JSON.parse(xhr.responseText);
-            const tbody = document.getElementById("sismos-tbody");
-            if (!tbody) return;
-            
-            tbody.innerHTML = "";
-            sismos.forEach(s => {
-              const tr = document.createElement("tr");
-              tr.innerHTML = `
-                <td>${s.Fecha}</td>
-                <td><b>${s.Magnitud}</b></td>
-                <td>${s.Profundidad} km</td>
-                <td>${s.RefGeografica}</td>
-              `;
-              tbody.appendChild(tr);
-            });
-          } catch (e) {
-            console.error("Error al parsear el JSON de sismos:", e);
-          }
-        } else {
-          console.error("Error al conectar con la API de Gael Cloud. Estado:", xhr.status);
-        }
-      }
-    };
-    xhr.send();
-  }
-
-  // Carga inicial y actualización automática cada 60 segundos
-  cargarSismos();
-  setInterval(cargarSismos, 60000);
-
-  // Funciones de utilidad y accesibilidad
-  let hablando = false;
-  function leerTexto() {
-    if (hablando) return;
-    const texto = document.body.innerText;
-    const speech = new SpeechSynthesisUtterance(texto);
-    speech.lang = "es-CL";
-    hablando = true;
-    speech.onend = () => hablando = false;
-    window.speechSynthesis.speak(speech);
-  }
-  function detenerLectura() {
-    window.speechSynthesis.cancel();
-    hablando = false;
-  }
-
   // Botón subir
   window.onscroll = function() {
     let boton = document.getElementById("btnSubir");
