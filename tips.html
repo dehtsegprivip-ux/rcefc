@@ -1,0 +1,539 @@
+<!DOCTYPE hrml>
+<html lang="es">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teléfonos de Emergencia</title>
+  <link rel="icon" href="EFC.png" type="image/png">
+  <link rel="icon" type="image/x-icon" href="EFC-Actual.ico">
+  <meta name="theme-color" content="#00ff41">
+  <style>
+:root { 
+    --primary-color: #00ff41; 
+    --secondary-color: #00cc33; 
+    --info: #00bfff; 
+    --bg-dark: #0d1117; 
+    --bg-darker: #05080a; 
+    --bg-card: #161b22; 
+    --text-color: #e6edf3; 
+    --text-muted: #8b949e; 
+    --nav-bg: rgba(13,17,23,0.95); 
+}
+    .no-crop {
+      object-fit: contain !important;
+      background: #111;
+    }
+
+    /* Responsive y accesibilidad */
+    @media (max-width: 900px) {
+      .rain-side { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rain-side, .rain-track { animation: none !important; }
+    }
+
+   html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 100px; 
+}
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Courier New', Courier, monospace; 
+}
+body { 
+      background-image: url(01.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+body::before { 
+    content: ""; 
+    position: fixed; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-image: 
+    linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.35) ), 
+    url('RED EFC.jpg'); 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+    background-size: 100% 100%; 
+    z-index: -1; 
+}
+header { 
+    position: relative; 
+    width: 100%; 
+    background-color: var(--nav-bg); 
+    border-bottom: 1px solid var(--primary-color); 
+    z-index: 1000; 
+    padding: 1rem 5%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    backdrop-filter: blur(5px); 
+}
+.logo-nav { 
+    font-size: 1.3rem; 
+    font-weight: bold; 
+    color: var(--primary-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    text-decoration: none; 
+}
+.logo-nav:hover { 
+    text-shadow: 0 0 15px var(--primary-color); 
+}
+
+nav a { 
+    display: inline-block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+nav a:hover {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+}
+
+nav a.active {
+  color: var(--primary-color);
+  background: rgba(0,255,65,0.12);
+  border: 1px solid var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+  box-shadow: 0 0 12px rgba(0,255,65,0.20);
+}
+
+nav ul { list-style: none; display: flex; gap: 15px; flex-wrap: wrap; }
+nav ul li a { text-decoration: none; color: var(--text-color); font-weight: bold; padding: 10px 12px; transition: all 0.3s; font-size: 0.9rem; }
+nav ul li a:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--primary-color); }
+/* ========
+   DROPDOWN
+   ======== */
+.dropdown { position: relative; }
+.dropdown-button { color: var(--text-color); cursor: pointer; font-weight: bold; padding: 10px 12px; }
+.dropdown-button:hover { color: var(--primary-color); }
+.dropdown-content { display: none; position: absolute; background-color: var(--bg-darker); min-width: 250px; border: 1px solid var(--primary-color); z-index: 2000; top: 100%; right: 0; border-radius: 5px; }
+.dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(0,255,65,0.1); }
+.dropdown-content a:hover { background-color: rgba(0,255,65,0.1); color: var(--primary-color); }
+.dropdown:hover .dropdown-content { display: block; }
+/* ==========
+   CONTENEDOR
+   ========== */
+.container { min-height: calc(100vh - 80px); padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+.hero {
+  text-align: center;
+  padding: 45px 20px 30px;
+}
+.hero h1 { margin: 0 auto 28px; }
+.contenido-objetivo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+.bloque-objetivo {
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(0, 255, 65, 0.32);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  backdrop-filter: blur(4px);
+}
+.bloque-objetivo h2 {
+  margin: 0 0 14px;
+  color: var(--primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.25);
+}
+.bloque-objetivo p {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+    .botones {
+      margin-top: 30px;
+    }
+
+    .botones a {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      color: white;
+    }
+    .botones a:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .seccion {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .seccion h3 { color: #333333; }
+    .seccion p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+    }
+    .titulo-seccion {
+      background: #33333374;
+      font-size: 28px;
+      color: rgb(221, 245, 6);
+      margin: 40px 0 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .titulo-seccion::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: #4facfe;
+      display: block;
+      margin: 10px auto 0;
+      border-radius: 5px;
+    }
+
+    .titulo-pagina {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 12px 22px;
+  color: #ffffff;
+  background: rgba(5, 8, 10, 0.92);
+  border: 1px solid rgba(0, 255, 65, 0.5);
+  border-radius: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+.titulo-pagina::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: var(--info);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+li {
+    color: #fdfcfc
+}
+
+    #btnSubir {
+      backdrop-filter: blur(5px);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #6e0b0b;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    #btnSubir:hover {
+      background: #007bff;
+      transform: scale(1.1);
+    }
+/* ======
+   FOOTER
+   ====== */
+footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
+.footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+/* =========
+   CELULARES
+   ========= */
+@media (max-width:768px) { header { flex-direction: column; gap: 15px; text-align: center; }
+.logo-nav { font-size: 1rem; }
+#map { height: 500px; }
+.map-legend { flex-direction: column; gap: 10px; } }
+</style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo-nav">Red Ciudadana E.F.C.</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a> 
+      <a href="objetivo.html">Objetivo</a>
+      <a href="salud.html">Salud</a>
+      <a href="fonoemergencias.html">Fono Emergencias</a>
+      <a href="tips.html" class="active">Tips S.O.S.</a>
+      <a href="radioaficion.html">R.A.</a>
+    </nav>
+    <nav>
+    <ul>
+      <li class="dropdown">
+        <div class="dropdown-button">Links ▾</div>
+        <div class="dropdown-content">
+          <a href="https://sismologia.cl/" target="_blank">Sismología</a>
+          <a href="https://senapred.cl/" target="_blank">SENAPRED</a>
+          <a href="https://www.cruzroja.cl/inicio/" target="_blank">Cruz Roja</a>
+          <a href="https://www.ce3ser.cl/" target="_blank">S.E.R. Chile</a>
+          <a href="https://www.sernageomin.cl/rnvv/" target="_blank">SERNAGEOMIN</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <h1 class="titulo-pagina">Tips y Consejos de Prevención</h1>
+    </section>
+
+    <div class="contenido-objetivo">
+
+        <article class="bloque-objetivo">
+            <h2>¿Qué hacer en caso de Sismo?</h2>
+            <p><strong>GRUPO GAE CHILE INFORMA:</strong></p>
+            <p>
+            Ya que hasta ahora no existe ninguna manera de saber cuándo ocurrirá un sismo, lo mejor que podemos hacer es 
+            informarnos y prepararnos para actuar de la mejor manera cuando se produzca el próximo sismo.
+            </p>
+            <p>Instituciones internacionales como la Agencia Federal para el Manejo de Emergencias de Estados Unidos (FEMA), 
+                la Agencia Meteorológica de Japón, la Campaña “Bogotá, con los pies en la tierra”, la Agencia para el Manejo de 
+                Emergencias de California y otras aconsejan las siguientes medidas para prevenir y disminuir los daños causados 
+                por un sismo.
+            </p>
+        </article>
+
+            <article class="bloque-objetivo">
+            <h2>Antes</h2>
+            <p>
+                En su hogar, determine los objetos que puedan convertirse en un peligro durante un terremoto, como, por ejemplo, 
+                cuadros, espejos, lámparas, macetas colgantes, etc. y reubíquelos o asegúrelos de manera que no puedan caerle 
+                encima de ocurrir un sismo.
+                Practique simulacros de terremoto. Con anticipación, cada miembro de su familia, oficina o escuela debería saber 
+                dónde colocarse en caso de sismo; por ejemplo, debajo de un escritorio o una mesa fuerte.
+                Conozca dónde y cómo cerrar el paso de la electricidad, el gas y el agua en los interruptores y tomas principales.
+                Acuerde un teléfono de contacto fuera de la ciudad al cual los miembros de su familia puedan llamar para hacerles 
+                saber a los demás que están bien.
+                Mantenga una reserva de alimentos no perecibles y agua potable para al menos 3 días.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>KIT BÁSICO DE EMERGENCIA</h2>
+            <p><strong>Acostúmbrese a tener a mano una mochila con:</strong></p>
+            <p>
+                <li>Radio portátil</li>
+                <li>Linterna y pilas</li>
+                <li>Botiquín de primeros auxilios</li>
+                <li>Agua embotellada</li>
+                <li>Alimentos enlatados y granos secos</li>
+                <li>Abrelatas</li>
+                <li>Una copia de sus documentos personales</li>
+                <li>Silbato</li>
+                <li>Listado con teléfonos de Emergencia</li>
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Durante</h2>
+            <p>
+                En lo posible manténgase tranquilo y permanezca en el interior mientras dure el terremoto.
+            </p>
+            <p>¡Échese al piso, cúbrase y agárrese! Dé solo los pasos que le permitan colocarse debajo de un lugar seguro, como 
+                un escritorio o una mesa resistente. Una vez allí agárrese con ambas manos de una pata.
+            </p>
+            <p>
+                Manténgase alejado de ventanas, vidrios, espejos, puertas exteriores o paredes y de todo lo que pueda caerle como 
+                lámparas y muebles.
+            </p>
+            <p>
+                Si no hay una mesa o escritorio cerca de usted, cúbrase la cara y la cabeza con sus brazos y agáchese lejos de 
+                ventanas y estanterías.
+            </p>
+            <p>
+                Si usted está en…
+            </p>
+            <p>
+                La calle: aléjese los postes y los cables eléctricos.
+            </p>
+            <p>
+                Un edificio: Métase debajo de una mesa o escritorio, alejado de ventanas y paredes exteriores. Permanezca allí 
+                hasta que haya pasado el movimiento. NO use los ascensores.
+            </p>
+            <p>
+                El interior de un lugar concurrido como un restaurante o un cine: Quédese donde esté. No corra hacia las puertas. 
+                Aléjese de las repisas que contengan objetos que puedan caerle.
+            </p>
+            <p>
+                Un carro en movimiento: Pare tan rápido como sea posible y quédese dentro del vehículo hasta que pase el temblor. 
+                Evite detenerse cerca o debajo de edificios, árboles, puentes o cables eléctricos. Luego, proceda cautelosamente, 
+                observando la carretera y los puentes para ver si tienen daños. Si tiene que salir, esté pendiente de objetos que 
+                caigan, cables eléctricos caídos y paredes, puentes, etc.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Despues</h2>
+            <p><strong>1. Si queda atrapado en los escombros:</strong></p>
+            <li>No encienda fuego</li>
+            <li>Trate de no moverse ni levantar polvo</li>
+            <li>Cúbrase la boca con un pañuelo o con su ropa</li>
+            <li>Dé golpes en un tubo o la pared para que los rescatadores puedan encontrarlo. Use un pito, si tiene uno. Grite sólo como último recurso, ya que al hacerlo podría tragar cantidades peligrosas de polvo.</li>
+
+            <p><strong>2. Sepa que después de un terremoto, vendrán réplicas. Si el lugar donde se encontraba fue afectado por el primer temblor, evite volver a él. Estas réplicas por lo general son menos violentas que el terremoto principal, pero suficientemente fuertes para causar daños adicionales a estructuras debilitadas.</strong></p>
+
+            <p><strong>3. Verifique si hay lesiones. No intente mover a las personas que estén seriamente lesionadas, a menos que estén en peligro inmediato de muerte o nuevas lesiones. Si tiene que mover a una persona inconsciente, estabilice primero el cuello y la espalda, y luego pida ayuda inmediatamente. Si la víctima no está respirando, coloque cuidadosamente a la víctima en posición para administrarle resucitación de boca a boca.</strong></p>
+
+            <p><strong>4. Mantenga la temperatura del cuerpo de la persona lesionada con una frazada, pero asegúrese de que no se caliente demasiado.</strong></p>
+
+            <p><strong>5. Nunca dé líquidos a una persona inconsciente.</strong></p>
+
+            <p><strong>6. Si la luz se corta, use linternas de batería. No use velas ni fósforos en el interior después de un terremoto, ya que puede haber fugas de gas.</strong></p>
+
+            <p><strong>7. Inspeccione su hogar para ver si hay daños estructurales. Si tiene dudas acerca de la seguridad, haga que un ingeniero civil inspeccione su casa antes de regresar.</strong></p>
+
+            <p><strong>8. Limpie el suelo de medicinas, blanqueadores, gasolina y otros líquidos inflamables derramados. Si se detectan vapores de gasolina y el edificio no está bien ventilado, salga inmediatamente. Si siente olor a gas o escucha un sonido de silbido o soplido, abra una ventana y salga.</strong></p>
+
+            <p><strong>9. Corte la corriente eléctrica, si sabe o sospecha que hay daños. Cierre el suministro de agua en la toma principal si las tuberías de agua están dañadas. No baje el agua de los inodoros hasta que sepa que el alcantarillado está en buenas condiciones.</strong></p>
+
+            <p><strong>10. Abra los gabinetes con cuidado, ya que los objetos pueden caer de los estantes.</strong></p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>TSUNAMI</h2>
+            <p>
+                Si está en la playa, esté consciente de la posibilidad de un tsunami, también llamado maremoto,”. Cuando las 
+                autoridades locales emitan una advertencia de tsunami o el mar retroceda más de lo normal o tenga un 
+                comportamiento extraño, sepa que una serie de olas peligrosas pueden llegar a las costas. Salga de la playa y 
+                camine a un lugar alto.
+            </p>
+
+            <h2>¿Triángulo de Vida?</h2>
+            <p>
+                En años recientes, un correo electrónico sobre el llamado "triángulo de vida", que da alternativas al ya 
+                establecido consejo de "Agacharse, Cubrirse y Agarrarse”, ha circulado por el mundo entero. Según La campaña 
+                “Echando Raíces en Tierra de Terremotos” del estado de California, las acciones recomendadas en este correo 
+                pueden ser riesgosas para la vida.
+            </p>
+            <p>
+                El consejo “triángulo de vida” está basado en el concepto del espacio vacío de sobrevivencia, pero hace varias suposiciones incorrectas:
+            </p>
+            <p>
+                Los edificios siempre se derrumban y aplastan a todos los muebles en el interior. Los residentes siempre pueden 
+                anticipar cómo sus edificios se van a derrumbar y localizar los espacios vacíos de sobrevivencia.
+                Durante los temblores fuertes la gente puede moverse al lugar deseado.
+                Otras recomendaciones en el correo electrónico del “triángulo de vida” también están basadas en suposiciones 
+                incorrectas y muy peligrosas. Por ejemplo, el consejo de salirse de su carro durante un terremoto y echarse al 
+                lado supone que siempre habrá una autopista elevada que se caerá y aplastará a su carro. Dado que hay muy pocas 
+                autopistas elevadas, acostarse al lado de su carro es muy peligroso porque éste podría moverse y aplastarlo.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Mitos y verdades sobre los terremotos…</h2>
+            <p>
+                “Durante el movimiento sísmico, lo recomendable es agacharse, cubrirse y afirmarse.”. <strong>VERDADERO</strong>
+            </p>
+            <p>
+                La recomendación internacional es “Agáchate, Cúbrete y Agárrate” (Drop, Cover and Hold On). Si existe una mesa o escritorio resistente cerca, se recomienda protegerse debajo y sujetarse hasta que termine el movimiento.
+            </p>
+            <p>
+                "Los vidrios y objetos que pueden caer representan un peligro importante durante un sismo". <strong>VERDADERO</strong>
+            </p>
+            <p>
+                Por eso se recomienda mantenerse alejado de ventanas, vidrios, estanterías y elementos que puedan desprenderse.
+            </p>
+            <p>
+                "No es recomendable correr hacia la salida mientras está temblando". <strong>VERDADERO</strong> 
+            </p>
+            <p>
+                Salir corriendo puede exponerte a objetos que caen, vidrios y otros peligros. USGS recomienda permanecer en el lugar y protegerse durante el movimiento.
+            </p>
+            <p>
+                "En Chile es importante contar con un plan familiar de emergencia". <strong>VERDADERO</strong>
+            </p>
+            <p>
+               SENAPRED recomienda que las familias identifiquen riesgos, establezcan acciones y definan cómo actuar ante una emergencia. 
+            </p>
+            <p>
+                "En zonas costeras, un terremoto puede generar una amenaza de tsunami". <strong>VERDADERO</strong>
+            </p>
+            <p>
+                En Chile, por su exposición sísmica y condición geográfica, terremotos pueden generar tsunamis. Por eso SENAPRED desarrolla simulacros de evacuación por sismo y tsunami y dispone del Visor Chile Preparado para conocer la exposición a amenazas, incluido tsunami.
+            </p>
+            <p>
+                “Durante un terremoto hay que ponerse bajo el marco de una puerta.” <strong>MITO</strong>
+            </p>
+            <p>
+                Es una recomendación antigua que no corresponde a la orientación moderna general. Un marco de puerta no debe considerarse automáticamente un lugar seguro. La recomendación actual es Agáchate, Cúbrete y Agárrate.
+            </p>
+            <p>
+                “Lo mejor es salir corriendo del edificio apenas comienza a temblar.” <strong>MITO</strong>
+            </p>
+            <p>
+                Durante el movimiento, correr hacia las salidas puede aumentar la exposición a peligros. La recomendación internacional es protegerse en el lugar donde se encuentra hasta que termine el movimiento.
+            </p>
+            <p>
+                “Si el terremoto es muy fuerte, significa que necesariamente habrá un tsunami.” <strong>MITO</strong>
+            </p>
+            <p>
+                Pueden producirse réplicas y existir peligros secundarios. Por ello, después del movimiento hay que mantenerse atento, evaluar el entorno y seguir las instrucciones de las autoridades.
+            </p>
+            <p>
+                “Tener una mochila o kit de emergencia significa que ya estamos preparados.” <strong>MITO</strong>
+            </p>
+            <p>
+                Un kit es solamente una parte de la preparación. SENAPRED recomienda además desarrollar un plan familiar, identificar riesgos y establecer cómo actuar ante una emergencia.
+            </p>
+        </article>
+        </div>
+
+        <footer>
+        <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
+        <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
+        </footer>
+
+  <button id="btnSubir" onclick="subirArriba()">⬆</button>
+
+  <script>
+    // Botón subir
+    window.onscroll = function() {
+      let boton = document.getElementById("btnSubir");
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        boton.style.display = "block";
+      } else {
+        boton.style.display = "none";
+      }
+    };
+    function subirArriba() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+  </div>
+  </body>
+</html>

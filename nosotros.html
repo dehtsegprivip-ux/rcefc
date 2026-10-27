@@ -1,0 +1,404 @@
+<!DOCTYPE hrml>
+<html lang="es">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nosotros</title>
+  <link rel="icon" href="EFC.png" type="image/png">
+  <link rel="icon" type="image/x-icon" href="EFC-Actual.ico">
+  <meta name="theme-color" content="#00ff41">
+  <style>
+:root {--primary-color: #00ff41; --secondary-color: #00cc33; --info: #00bfff; --bg-dark: #0d1117; --bg-darker: #05080a; --bg-card: #161b22; --text-color: #e6edf3; --text-muted: #8b949e; --nav-bg: rgba(13,17,23,0.95);}
+    .no-crop {object-fit: contain !important; background: #111;}
+
+    /* Responsive y accesibilidad */
+    @media (max-width: 900px) {.rain-side { display: none; }}
+    @media (prefers-reduced-motion: reduce) {.rain-side, .rain-track { animation: none !important; }}
+   html {scroll-behavior: smooth; scroll-padding-top: 100px;}
+* {margin: 0; padding: 0; box-sizing: border-box; font-family: 'Courier New', Courier, monospace;}
+body { 
+      background-image: url(01.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      margin: 0; font-family: system-ui, -apple-system, sans-serif;}
+body::before { 
+    content: ""; 
+    position: fixed; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-image: 
+    linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.35) ), 
+    url('RED EFC.jpg'); 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+    background-size: 100% 100%; 
+    z-index: -1; 
+}
+header { 
+    position: relative; 
+    width: 100%; 
+    background-color: var(--nav-bg); 
+    border-bottom: 1px solid var(--primary-color); 
+    z-index: 1000; 
+    padding: 1rem 5%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    backdrop-filter: blur(5px); 
+}
+.logo-nav { 
+    font-size: 1.3rem; 
+    font-weight: bold; 
+    color: var(--primary-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    text-decoration: none; 
+}
+.logo-nav:hover { 
+    text-shadow: 0 0 15px var(--primary-color); 
+}
+
+nav a { 
+    display: inline-block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+nav a:hover {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+}
+
+nav a.active {
+  color: var(--primary-color);
+  background: rgba(0,255,65,0.12);
+  border: 1px solid var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+  box-shadow: 0 0 12px rgba(0,255,65,0.20);
+}
+
+nav ul { list-style: none; display: flex; gap: 15px; flex-wrap: wrap; }
+nav ul li a { text-decoration: none; color: var(--text-color); font-weight: bold; padding: 10px 12px; transition: all 0.3s; font-size: 0.9rem; }
+nav ul li a:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--primary-color); }
+/* ========
+   DROPDOWN
+   ======== */
+.dropdown { position: relative; }
+.dropdown-button { color: var(--text-color); cursor: pointer; font-weight: bold; padding: 10px 12px; }
+.dropdown-button:hover { color: var(--primary-color); }
+.dropdown-content { display: none; position: absolute; background-color: var(--bg-darker); min-width: 250px; border: 1px solid var(--primary-color); z-index: 2000; top: 100%; right: 0; border-radius: 5px; }
+.dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(0,255,65,0.1); }
+.dropdown-content a:hover { background-color: rgba(0,255,65,0.1); color: var(--primary-color); }
+.dropdown:hover .dropdown-content { display: block; }
+/* ==========
+   CONTENEDOR
+   ========== */
+.container { min-height: calc(100vh - 80px); padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+.hero {
+  text-align: center;
+  padding: 45px 20px 30px;
+}
+.hero h1 { margin: 0 auto 28px; }
+.contenido-objetivo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+.bloque-objetivo {
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(0, 255, 65, 0.32);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  backdrop-filter: blur(4px);
+}
+.bloque-objetivo h2 {
+  margin: 0 0 14px;
+  color: var(--primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.25);
+}
+.bloque-objetivo p {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+    .botones {
+      margin-top: 30px;
+    }
+
+    .botones a {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      color: white;
+    }
+    .botones a:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .seccion {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .seccion h3 { color: #333333; }
+    .seccion p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+    }
+    .titulo-seccion {
+      background: #33333374;
+      font-size: 28px;
+      color: rgb(221, 245, 6);
+      margin: 40px 0 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .titulo-seccion::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: #4facfe;
+      display: block;
+      margin: 10px auto 0;
+      border-radius: 5px;
+    }
+
+    .titulo-pagina {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 12px 22px;
+  color: #ffffff;
+  background: rgba(5, 8, 10, 0.92);
+  border: 1px solid rgba(0, 255, 65, 0.5);
+  border-radius: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+.titulo-pagina::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: var(--info);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+.bloque-objetivo .imagen-objetivo {
+  float: right;            /* Mueve la imagen a la derecha */
+  margin-right: 20px;     /* Espacio para que el texto no toque la imagen */
+  margin-bottom: 10px;    /* Espacio inferior */
+  max-width: 200px;
+  height: auto;
+}
+li {
+    color: #fdfcfc
+}
+
+    #btnSubir {
+      backdrop-filter: blur(5px);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #6e0b0b;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    #btnSubir:hover {
+      background: #007bff;
+      transform: scale(1.1);
+    }
+/* ======
+   FOOTER
+   ====== */
+footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
+.footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+/* =========
+   CELULARES
+   ========= */
+@media (max-width:768px) { header { flex-direction: column; gap: 15px; text-align: center; }
+.logo-nav { font-size: 1rem; }
+#map { height: 500px; }
+.map-legend { flex-direction: column; gap: 10px; } }
+</style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo-nav">Red Ciudadana E.F.C.</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html" class="active">Nosotros</a>
+      <a href="objetivo.html">Objetivo</a>
+      <a href="salud.html">Salud</a>
+      <a href="fonoemergencias.html">Fono Emergencias</a>
+      <a href="tips.html">Tips S.O.S.</a>
+      <a href="radioaficion.html">R.A.</a>
+    </nav>
+    <nav>
+    <ul>
+      <li class="dropdown">
+        <div class="dropdown-button">Links ▾</div>
+        <div class="dropdown-content">
+          <a href="https://sismologia.cl/" target="_blank">Sismología</a>
+          <a href="https://senapred.cl/" target="_blank">SENAPRED</a>
+          <a href="https://www.cruzroja.cl/inicio/" target="_blank">Cruz Roja</a>
+          <a href="https://www.ce3ser.cl/" target="_blank">S.E.R. Chile</a>
+          <a href="https://www.sernageomin.cl/rnvv/" target="_blank">SERNAGEOMIN</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <h1 class="titulo-pagina">Nosotros</h1>
+    </section>
+
+    <div class="contenido-objetivo">
+
+        <article class="bloque-objetivo">
+            <img src="GRUFAC - 2015.jpg" alt="GRUFAC - 2015" class="imagen-objetivo">
+            <h2>Inicio de Nuestra Red</h2>
+            <p><strong>Historia</strong></p>
+            <p>
+            El año 2015 un grupo de cinco personas, entre ellos dos radioaficionados, viendonos en la necesidad de contar con soporte
+            en materias inherentes a la difusión de información en situaciones de emergencia, decidimos crear una red de enlace a 
+            nivel local la cual en ese entonces contaríamos con soporte de radioaficionados nacionales y una red logistica 
+            internacional con voluntarios de España y Suecia en Europa, en tanto en Sudamerica personas de Venezuela, Paraguay, 
+            Argentina, Uruguay y Gran parte de Chile.
+            </p>
+            <p>
+            Durante los primeros meses de funcionamiento, la red se llamaba "Grupo Fenix Alarm Chile" (GRUFAC), y contaba con un grupo
+            de voluntarios que se encargaban de monitorear y difundir información sobre emergencias y desastres naturales en Chile.
+            </p>
+        </article>
+
+            <article class="bloque-objetivo">
+                <img src="EFC 2015 - 2016.jpg" alt="EFC 2015 - 2016" class="imagen-objetivo">
+                <h2>Primer Año</h2>
+            <p>
+                A finales del año 2015, la red cambió su nombre a "Red Ciudadana Emergencias Fénix Chile" (RCEFC), con proyección
+                de expandirse a nivel nacional y contar con un grupo de voluntarios más amplio. 
+                Durante el primer año de funcionamiento, la red se fija la meta de establecerse como una organización sin fines 
+                de lucro dedicada a la difusión de información sobre emergencias y desastres naturales en Chile.
+            </p>
+            <p>
+                Creando cuentas de redes sociales como Twitter, Facebook y un grupo de WhatsApp ademas de un blog para difundir 
+                información y noticias sobre emergencias y desastres naturales, además de establecer contacto con otras 
+                organizaciones no gubernamentales para colaborar en la difusión de información.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="EFC 2016 - 2018.jpg" alt="EFC 2016 - 2018" class="imagen-objetivo">
+            <h2>Segundo Año (2016-2018): Expansión Nacional</h2>
+            <p>
+               Durante el segundo año de funcionamiento, la red se enfoca en expandirse a nivel nacional y establecer contacto con
+               otras organizaciones no gubernamentales como Radio Comunitaria de Graneros, Amigos de la Informacion Chile, Club 
+               Provincial Cordillera CE3PA cuyo enlace fue Richard Sepulveda Contador (con quien colaboramos hasta hoy), colaboraciòn
+               con radioaficionados de norte a sur de Chile, y con voluntarios de otros países de Sudamérica y Europa. Este enfoque
+               nos permitio establecer una red de voluntariado mas robusta y poder llegar a mas personas en todo Chile.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="EFC 2018 - 2024.jpg" alt="EFC 2018 - 2024" class="imagen-objetivo">
+            <h2>(2018-2024): Consolidación</h2>
+            <p>
+                A finales del año 2017, la red sufre cambios internos y se reorganiza para consolidarse como una organizacion sin
+                fines de lucro, con un enfoque en la difusión de información sobre emergencias y desastres naturales en Chile.
+                Para ello, se establecen protocolos de comunicacion y se crea el primer canal de difusion de informacion a traves de
+                la plataforma Zello, ademas se consolidan alianzas de cooperacion con entidades informativas en Longavi, Talca, Linares,
+                Concepcion, Temuco y Villarica en Chile, ademas entidades difusoras de informacion en Paraguay, Argentina y Venezuela.
+            </p>            
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="EFC 2024 - 2025.jpg" alt="EFC 2024 - 2025" class="imagen-objetivo">
+            <h2>Desde 2024: Estabilidad y Permanencia</h2>
+            <p>
+                Desde el año 2024, la red se ha mantenido estable y ha continuado su labor de difusión de información sobre emergencias
+                y desastres naturales en Chile y el extranjero. La red cuenta con un grupo de voluntarios comprometidos y capacitados 
+                para brindar información precisa y oportuna a la comunidad, ademas de mantener una presencia activa en redes sociales y 
+                medios de comunicación para llegar a un público más amplio.  
+            </p>
+
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="EFC Actual.png" alt="EFC Actual" class="imagen-objetivo">
+            <h2>2026: Presente y Futuro</h2>
+            <p>
+                En la actualidad, la Red Ciudadana Emergencias Fenix Chile continua su labor de difusion de informaciones sobre emergencias
+                y hechos relevantes en Chile y el mundo, ademas de mantener una red de voluntarios comprometidos para brindar informacion
+                precisa y opotuna a la comunidad. Nuestra red sigue siendo una organizacion sin fines de lucro, enfocada en la prevencion,
+                educacion y difusion de Sismos y Tsunamis a cargo de nuestra colaboradora Norma Vargas Vidal, informacion y monitoreo de la
+                red de vigilancia volcanica (SERNAGEOMIN) a cargo de nuestro colaborador y Sub-Director David Catricura Lara, informacion y
+                enlace con la red de radioaficionados a cargo de nuestro colaborador Richar Sepulveda Contador, proteccion y filtracion de 
+                informacion carente de veracidad (fake news) a cargo de nuestra colaboradora y encargada de comunicaciones Elizabeth Olivares
+                Maulen, mantenimiento, soporte tecnologico y ciberseguridad de la red a cargo de nuestro colaborador y Director David Hernadez Jimenez.
+            </p>
+        </article>
+        </div>
+
+        <footer>
+        <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
+        <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
+        </footer>
+
+  <button id="btnSubir" onclick="subirArriba()">⬆</button>
+
+  <script>
+    // Botón subir
+    window.onscroll = function() {
+      let boton = document.getElementById("btnSubir");
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        boton.style.display = "block";
+      } else {
+        boton.style.display = "none";
+      }
+    };
+    function subirArriba() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+  </div>
+  </body>
+</html>

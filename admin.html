@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Panel de Administración</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+
+  <style>
+    body { background-image: url("fondo.jpg"); background-size: cover; background-position: center; background-attachment: fixed; background-repeat: no-repeat; }
+    nav { background: white; display: flex; justify-content: center; gap: 20px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    nav a { text-decoration: none; color: #333; font-weight: bold; padding: 8px 15px; border-radius: 8px; transition: 0.3s; }
+    nav a:hover { background: #4facfe; color: white; }
+    nav a.activo { background: #4facfe; color: white; }
+    h2, h3 { text-align: center; color: white; }
+    .contenedor { max-width: 600px; margin: auto; }
+    .card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    input { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #ccc; }
+    button { width: 100%; padding: 10px; background: #4facfe; border: none; color: white; border-radius: 8px; cursor: pointer; margin-top: 5px; }
+    button:hover { background: #00c6ff; }
+    .item { border-bottom: 1px solid #ddd; padding: 10px 5px; position: relative; }
+    .eliminar { position: absolute; right: 5px; top: 10px; background: red; border: none; color: white; border-radius: 5px; cursor: pointer; padding: 3px 8px; }
+    .eliminar:hover { background: darkred; }
+    select { width: 100%; padding: 10px; margin: 6px 0; border-radius: 8px; border: 1px solid #ccc; }
+    .historia { border: 1px solid #ccc; padding: 10px; margin-bottom: 10px; border-radius: 6px; background: white; }
+    #historias-aprobadas .historia { border-left: 4px solid #4facfe; background: #f8fbff; }
+    #historias-aprobadas h4 { color: #2c3e50; margin: 0 0 5px 0; }
+    #historias-aprobadas p { color: #555; margin: 0 0 8px 0; line-height: 1.4; }
+    #historias-aprobadas small { color: #888; display: block; text-align: right; }
+  </style>
+</head>
+
+<body>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, query, where, updateDoc, doc } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+async function cargarDesdeFirebase() {
+const lista = document.getElementById("lista");
+lista.innerHTML = "Cargando...";
+
+try { const snapshot = await getDocs(collection(db, "personas"));
+    lista.innerHTML = "";
+if (snapshot.empty) { lista.innerHTML = "<p>No hay registros</p>";
+return; }
+
+snapshot.forEach(doc => { const p = doc.data();
+const div = document.createElement("div");
+div.className = "item";
+
+div.innerHTML = `<b>${p.nombre} ${p.apellido}</b><br>
+${p.ocupacion || "Sin ocupación"}<br>
+${p.localidad} - ${p.region}
+${p.foto ? `<br><img src="${p.foto}" width="100">` : ""}`;
+lista.appendChild(div); });
+} catch (e) { console.error(e); lista.innerHTML = "<p>Error al cargar datos</p>"; } }
+   
+// 🔥 CONFIG
+const firebaseConfig = {
+  apiKey: "AIzaSyDTxUtqXNOJnRaevn06x4VaBO_YSL32FNQ",
+  authDomain: "fundacionpositiva-45a7c.firebaseapp.com",
+  projectId: "fundacionpositiva-45a7c",
+};
+ 
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// 🖼️ Convertir imagen
+function convertirImagen(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+
+// 🚀 CUANDO CARGA TODO
+document.addEventListener("DOMContentLoaded", () => {
+
+  document.getElementById("btnGuardar").addEventListener("click", async () => {
+
+    try {
+      const nombre = document.getElementById("nombre").value.trim();
+      const apellido = document.getElementById("apellido").value.trim();
+      const ocupacion = document.getElementById("ocupacion").value.trim();
+      const localidad = document.getElementById("localidad").value.trim();
+      const region = document.getElementById("region").value.trim();
+      const archivo = document.getElementById("foto").files[0];
+
+      if (!nombre || !apellido || !localidad || !region) {
+        alert("Completa los campos obligatorios");
+        return;
+      }
+
+      let fotoBase64 = "";
+
+      if (archivo && archivo.size <= 300000) {
+        fotoBase64 = await convertirImagen(archivo);
+      }
+
+      // 📍 Coordenadas
+      let lat = null;
+      let lng = null;
+
+      try {
+        const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${localidad}, Chile`);
+        const data = await res.json();
+
+        if (data.length > 0) {
+          lat = parseFloat(data[0].lat);
+          lng = parseFloat(data[0].lon);
+        }
+      } catch (e) {
+        console.warn("Error geolocalización");
+      }
+
+      // 🔥 GUARDAR EN FIREBASE
+      await addDoc(collection(db, "personas"), {
+        nombre,
+        apellido,
+        ocupacion,
+        localidad,
+        region,
+        foto: fotoBase64,
+        lat,
+        lng,
+        fecha: new Date()
+      });
+      
+     // GUARDAR TAMBIÉN LOCALMENTE
+      let datos = JSON.parse(localStorage.getItem("personas")) || [];
+      datos.push({
+        nombre,
+        apellido,
+        ocupacion,
+        localidad,
+        region
+      });
+      localStorage.setItem("personas", JSON.stringify(datos));
+
+      // ACTUALIZAR LISTA
+      mostrarLista();
+      
+      alert("Guardado correctamente ✔");
+
+      limpiar();
+
+    } catch (e) {
+      console.error(e);
+      alert("Error al guardar en Firebase");
+    }
+  });
+
+  function limpiar() {
+    document.getElementById("nombre").value = "";
+    document.getElementById("apellido").value = "";
+    document.getElementById("ocupacion").value = "";
+    document.getElementById("localidad").value = "";
+    document.getElementById("region").value = "";
+    document.getElementById("foto").value = "";
+  }
+
+});
+document.addEventListener("DOMContentLoaded", async () => {
+cargarDesdeFirebase();
+await cargarPendientes();
+await cargarHistoriasAprobadas();
+});
+
+   async function cargarPendientes() {
+     const contenedor = document.getElementById("pendientes");
+     if (!contenedor) return;
+
+     const snapshot = await getDocs(collection(db, "historias"));
+
+     contenedor.innerHTML = "";
+
+     snapshot.forEach((docSnap) => {
+      const data = docSnap.data();
+      
+      if (data.aprobado === false) {
+        const div = document.createElement("div");
+        
+       div.innerHTML = `
+       <h4>${data.nombre} (${data.tipo})</h4>
+       <p>${data.historia}</p>
+       <button onclick="aprobar('${docSnap.id}')">Aprobar</button>
+       `;
+
+       contenedor.appendChild(div);
+      }
+     });
+   }
+
+   window.aprobar = async (id) => {
+    try {
+      const ref = doc(db, "historias", id);
+      await updateDoc(ref, {
+        aprobado: true,
+        fechaAprobacion: new Date()
+      });
+      
+      // Recargar ambas secciones
+      await cargarPendientes();
+      await cargarHistoriasAprobadas();
+
+      alert("✅ Historia aprobada y publicada");
+    } catch (e) {
+      console.error("Error al aprobar:", e);
+      alert("❌ Error al aprobar la historia");
+    }
+   };
+      // Filtar solo historias aprobadas
+      async function cargarHistoriasAprobadas() {
+        const contenedor = document.getElementById("historias-aprobadas");
+        if (!contenedor) return;
+
+        try {
+          const q = query(collection(db, "historias"), where("aprobado", "==", true));
+          const snapshot = await getDocs(q);
+
+          contenedor.innerHTML = "";
+
+          if (snapshot.empty) {
+            contenedor.innerHTML = "<p>No hay historias aprobadas aún</p>";
+            return;
+          }
+
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const div = document.createElement("div");
+            div.className = "historia";
+
+            let fechaStr = "";
+            if (data.fechaAprobacion) {
+              const fecha = data.fechaAprobacion.toDate?.() || data.fechaAprobacion;
+              fechaStr = new Date(fecha).toLocaleDateString();
+            }
+
+            div.innerHTML = `
+            <h4>${data.nombre} (${data.tipo})</h4>
+            <p><em>${data.historia}</em></p>
+            <small>📅 ${fechaStr}</small>
+            `;
+            
+            contenedor.appendChild(div);
+          });
+        } catch (e) {
+          console.error("Error cargando historias aprobadas:", e);
+        }
+      }
+</script>
+
+<script>
+// DECLARACION GLOBAL DE DATOS
+let datos = JSON.parse(localStorage.getItem("personas")) || [];
+
+// 🔐 CONTRASEÑA
+const PASSWORD = "D4v1D@l3j4nDr0#H3rN4nD3z_J1m3N3z";
+const intento = prompt("Ingrese contraseña:");
+
+if (intento !== PASSWORD) {
+  alert("Acceso denegado");
+  window.location.href = "index.html";
+}
+</script>
+<nav>
+    <a href="index.html">Inicio</a>
+    <a href="PanelAdmin.html" class="activo">Administración</a>
+  </nav>
+
+<div class="contenedor">
+
+  <h2>Panel de Administración</h2>
+
+  <div class="card">
+    <input id="nombre" placeholder="Nombre">
+    <input id="apellido" placeholder="Apellido">
+    <input id="ocupacion" placeholder="Ocupación">
+    <select id="region">
+      <option value="">Selecciona Región</option>
+    </select>
+
+    <select id="localidad">
+      <option value="">Selecciona Comuna</option>
+    </select>
+
+    <input type="file" id="foto" accept="image/*">
+
+    <button id="btnGuardar">Guardar</button>
+  </div>
+
+  <h3>Personas registradas</h3>
+  <div id="lista" class="card"></div>
+
+  <h2>Historias Pendientes</h2>
+  <div id="pendientes" class="card"></div>
+
+  <h2>Historias Aprobadas</h2>
+  <div id="historias-aprobadas" class="card"></div>
+
+</div>
+
+<script>
+// 📦 DATOS
+
+const regiones = {
+  "Arica y Parinacota": ["Arica","Camarones","Putre","General Lagos"],
+  "Tarapacá": ["Iquique","Alto Hospicio","Pozo Almonte","Camiña","Colchane","Huara","Pica"],
+  "Antofagasta": ["Antofagasta","Mejillones","Sierra Gorda","Taltal","Calama","Ollagüe","San Pedro de Atacama","Tocopilla","María Elena"],
+  "Atacama": ["Copiapó","Caldera","Tierra Amarilla","Chañaral","Diego de Almagro","Vallenar","Alto del Carmen","Freirina","Huasco"],
+  "Coquimbo": ["La Serena","Coquimbo","Andacollo","La Higuera","Paiguano","Vicuña","Illapel","Canela","Los Vilos","Salamanca","Ovalle","Combarbalá","Monte Patria","Punitaqui","Río Hurtado"],
+  "Valparaíso": ["Valparaíso","Casablanca","Concón","Juan Fernández","Puchuncaví","Quintero","Viña del Mar","Isla de Pascua","Los Andes","Calle Larga","Rinconada","San Esteban","La Ligua","Cabildo","Papudo","Petorca","Zapallar","Quillota","La Cruz","La Calera","Nogales","Hijuelas","Limache","Olmué","San Antonio","Algarrobo","Cartagena","El Quisco","El Tabo","Santo Domingo","San Felipe","Catemu","Llaillay","Panquehue","Putaendo","Santa María"],
+  "Metropolitana": ["Santiago","Cerrillos","Cerro Navia","Conchalí","El Bosque","Estación Central","Huechuraba","Independencia","La Cisterna","La Florida","La Granja","La Pintana","La Reina","Las Condes","Lo Barnechea","Lo Espejo","Lo Prado","Macul","Maipú","Ñuñoa","Pedro Aguirre Cerda","Peñalolén","Providencia","Pudahuel","Quilicura","Quinta Normal","Recoleta","Renca","San Joaquín","San Miguel","San Ramón","Vitacura","Puente Alto","Pirque","San José de Maipo","Colina","Lampa","Tiltil","San Bernardo","Buin","Calera de Tango","Paine","Melipilla","Alhué","Curacaví","María Pinto","San Pedro","Talagante","El Monte","Isla de Maipo","Padre Hurtado","Peñaflor"],
+  "O'Higgins": ["Rancagua","Codegua","Coinco","Coltauco","Doñihue","Graneros","Las Cabras","Machalí","Malloa","Mostazal","Olivar","Peumo","Pichidegua","Quinta de Tilcoco","Rengo","Requínoa","San Vicente","Pichilemu","La Estrella","Litueche","Marchihue","Navidad","Paredones","San Fernando","Chépica","Chimbarongo","Lolol","Nancagua","Palmilla","Peralillo","Placilla","Pumanque","Santa Cruz"],
+  "Maule": ["Talca","Constitución","Curepto","Empedrado","Maule","Pelarco","Pencahue","Río Claro","San Clemente","San Rafael","Curicó","Hualañé","Licantén","Molina","Rauco","Romeral","Sagrada Familia","Teno","Vichuquén","Linares","Colbún","Longaví","Parral","Retiro","San Javier","Villa Alegre","Yerbas Buenas","Cauquenes","Chanco","Pelluhue"],
+  "Ñuble": ["Chillán","Bulnes","Cobquecura","Coelemu","Coihueco","Chillán Viejo","El Carmen","Ninhue","Ñiquén","Pemuco","Pinto","Portezuelo","Quillón","Quirihue","Ránquil","San Carlos","San Fabián","San Ignacio","San Nicolás","Treguaco","Yungay"],
+  "Biobío": ["Concepción","Coronel","Chiguayante","Florida","Hualqui","Lota","Penco","San Pedro de la Paz","Santa Juana","Talcahuano","Tomé","Hualpén","Lebu","Arauco","Cañete","Contulmo","Curanilahue","Los Álamos","Tirúa","Los Ángeles","Antuco","Cabrero","Laja","Mulchén","Nacimiento","Negrete","Quilaco","Quilleco","San Rosendo","Santa Bárbara","Tucapel","Yumbel","Alto Biobío"],
+  "Araucanía": ["Temuco","Carahue","Cunco","Curarrehue","Freire","Galvarino","Gorbea","Lautaro","Loncoche","Melipeuco","Nueva Imperial","Padre Las Casas","Perquenco","Pitrufquén","Pucón","Saavedra","Teodoro Schmidt","Toltén","Vilcún","Villarrica","Cholchol","Angol","Collipulli","Curacautín","Ercilla","Lonquimay","Los Sauces","Lumaco","Purén","Renaico","Traiguén","Victoria"],
+  "Los Ríos": ["Valdivia","Corral","Lanco","Los Lagos","Máfil","Mariquina","Paillaco","Panguipulli","La Unión","Futrono","Lago Ranco","Río Bueno"],
+  "Los Lagos": ["Puerto Montt","Calbuco","Cochamó","Fresia","Frutillar","Los Muermos","Llanquihue","Maullín","Puerto Varas","Castro","Ancud","Chonchi","Curaco de Vélez","Dalcahue","Puqueldón","Queilén","Quellón","Quemchi","Quinchao","Osorno","Puerto Octay","Purranque","Puyehue","Río Negro","San Juan de la Costa","San Pablo","Chaitén","Futaleufú","Hualaihué","Palena"],
+  "Aysén": ["Coyhaique","Lago Verde","Aysén","Cisnes","Guaitecas","Cochrane","O'Higgins","Tortel","Chile Chico","Río Ibáñez"],
+  "Magallanes": ["Punta Arenas","Laguna Blanca","Río Verde","San Gregorio","Cabo de Hornos","Antártica","Porvenir","Primavera","Timaukel","Natales","Torres del Paine"]  
+};
+
+const selectRegion = document.getElementById("region");
+const selectComuna = document.getElementById("localidad");
+
+// Cargar Regiones
+for (let region in regiones) {
+  const option = document.createElement("option");
+  option.value = region;
+  option.textContent = region;
+  selectRegion.appendChild(option);
+}
+
+selectRegion.addEventListener("change", () => {
+  const regionSeleccionada = selectRegion.value;
+
+  selectComuna.innerHTML = '<option value="">Selecciona Comuna</option>';
+
+    if (regiones[regionSeleccionada]) {
+      regiones[regionSeleccionada].forEach(comuna => {
+        const option = document.createElement("option");
+        option.value = comuna;
+        option.textContent = comuna;
+        selectComuna.appendChild(option);
+      });
+    }
+});
+
+// 📋 LISTA
+function mostrarLista() {
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "";
+
+  if (datos.length === 0) {
+    lista.innerHTML = "<p>No hay registros</p>";
+    return;
+  }
+
+  datos.forEach((p, index) => {
+    const div = document.createElement("div");
+    div.className = "item";
+
+    div.innerHTML = `
+      <b>${p.nombre} ${p.apellido}</b><br>
+      ${p.ocupacion || "Sin ocupación"}<br>
+      ${p.localidad} - ${p.region}
+    `;
+
+    const btn = document.createElement("button");
+    btn.textContent = "❌";
+    btn.className = "eliminar";
+    btn.onclick = () => eliminar(index);
+
+    div.appendChild(btn);
+    lista.appendChild(div);
+  });
+}
+
+// ❌ ELIMINAR
+function eliminar(index) {
+  if (confirm("¿Eliminar este registro?")) {
+    datos.splice(index, 1);
+    localStorage.setItem("personas", JSON.stringify(datos));
+    mostrarLista();
+  }
+}
+
+// 🧹 LIMPIAR
+function limpiar() {
+  document.getElementById("nombre").value = "";
+  document.getElementById("apellido").value = "";
+  document.getElementById("ocupacion").value = "";
+  document.getElementById("localidad").value = "";
+  document.getElementById("region").value = "";
+  document.getElementById("foto").value = "";
+}
+  mostrarLista();
+  
+</script>
+
+</body>
+</html>

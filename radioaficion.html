@@ -1,0 +1,678 @@
+<!DOCTYPE hrml>
+<html lang="es">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Radioaficionados</title>
+  <link rel="icon" href="EFC.png" type="image/png">
+  <link rel="icon" type="image/x-icon" href="EFC-Actual.ico">
+  <meta name="theme-color" content="#00ff41">
+  <style>
+    :root { 
+    --primary-color: #00ff41; 
+    --secondary-color: #00cc33; 
+    --info: #00bfff; 
+    --bg-dark: #0d1117; 
+    --bg-darker: #05080a; 
+    --bg-card: #161b22; 
+    --text-color: #e6edf3; 
+    --text-muted: #8b949e; 
+    --nav-bg: rgba(13,17,23,0.95); 
+}
+    .no-crop {
+      object-fit: contain !important;
+      background: #111;
+    }
+
+    /* Responsive y accesibilidad */
+    @media (max-width: 900px) {
+      .rain-side { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rain-side, .rain-track { animation: none !important; }
+    }
+
+   html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 100px; 
+}
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Courier New', Courier, monospace; 
+}
+body { 
+      background-image: url(01.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+body::before { 
+    content: ""; 
+    position: fixed; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-image: 
+    linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.35) ), 
+    url('RED EFC.jpg'); 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+    background-size: 100% 100%; 
+    z-index: -1; 
+}
+header { 
+    position: relative; 
+    width: 100%; 
+    background-color: var(--nav-bg); 
+    border-bottom: 1px solid var(--primary-color); 
+    z-index: 1000; 
+    padding: 1rem 5%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    backdrop-filter: blur(5px); 
+}
+.logo-nav { 
+    font-size: 1.3rem; 
+    font-weight: bold; 
+    color: var(--primary-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    text-decoration: none; 
+}
+.logo-nav:hover { 
+    text-shadow: 0 0 15px var(--primary-color); 
+}
+
+nav a { 
+    display: inline-block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+nav a:hover {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+}
+
+nav a.active {
+  color: var(--primary-color);
+  background: rgba(0,255,65,0.12);
+  border: 1px solid var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+  box-shadow: 0 0 12px rgba(0,255,65,0.20);
+}
+
+nav ul { list-style: none; display: flex; gap: 15px; flex-wrap: wrap; }
+nav ul li a { text-decoration: none; color: var(--text-color); font-weight: bold; padding: 10px 12px; transition: all 0.3s; font-size: 0.9rem; }
+nav ul li a:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--primary-color); }
+/* ========
+   DROPDOWN
+   ======== */
+.dropdown { position: relative; }
+.dropdown-button { color: var(--text-color); cursor: pointer; font-weight: bold; padding: 10px 12px; }
+.dropdown-button:hover { color: var(--primary-color); }
+.dropdown-content { display: none; position: absolute; background-color: var(--bg-darker); min-width: 250px; border: 1px solid var(--primary-color); z-index: 2000; top: 100%; right: 0; border-radius: 5px; }
+.dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(0,255,65,0.1); }
+.dropdown-content a:hover { background-color: rgba(0,255,65,0.1); color: var(--primary-color); }
+.dropdown:hover .dropdown-content { display: block; }
+/* ==========
+   CONTENEDOR
+   ========== */
+.container { min-height: calc(100vh - 80px); padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+.hero {
+  text-align: center;
+  padding: 45px 20px 30px;
+}
+.hero h1 { margin: 0 auto 28px; }
+.contenido-objetivo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+.bloque-objetivo {
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(0, 255, 65, 0.32);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  backdrop-filter: blur(4px);
+}
+.bloque-objetivo h2 {
+  margin: 0 0 14px;
+  color: var(--primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.25);
+}
+.bloque-objetivo p {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+    .botones {
+      margin-top: 30px;
+    }
+
+    .botones a {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      color: white;
+    }
+    .botones a:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .seccion {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .seccion h3 { color: #333333; }
+    .seccion p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+    }
+    .titulo-seccion {
+      background: #33333374;
+      font-size: 28px;
+      color: rgb(221, 245, 6);
+      margin: 40px 0 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .titulo-seccion::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: #4facfe;
+      display: block;
+      margin: 10px auto 0;
+      border-radius: 5px;
+    }
+
+    .titulo-pagina {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 12px 22px;
+  color: #ffffff;
+  background: rgba(5, 8, 10, 0.92);
+  border: 1px solid rgba(0, 255, 65, 0.5);
+  border-radius: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+.titulo-pagina::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: var(--info);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+li {
+    color: #fdfcfc
+}
+
+.bloque-objetivo .imagen-objetivo {
+  float: right;            /* Mueve la imagen a la derecha */
+  margin-right: 20px;     /* Espacio para que el texto no toque la imagen */
+  margin-bottom: 10px;    /* Espacio inferior */
+  max-width: 200px;
+  height: auto;
+}
+
+/* Limpia el float para evitar desbordamientos del article */
+.bloque-objetivo::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+    #btnSubir {
+      backdrop-filter: blur(5px);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #6e0b0b;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    #btnSubir:hover {
+      background: #007bff;
+      transform: scale(1.1);
+    }
+/* ======
+   FOOTER
+   ====== */
+footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
+.footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+/* =========
+   CELULARES
+   ========= */
+@media (max-width:768px) { header { flex-direction: column; gap: 15px; text-align: center; }
+.logo-nav { font-size: 1rem; }
+#map { height: 500px; }
+.map-legend { flex-direction: column; gap: 10px; } }
+</style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo-nav">Red Ciudadana E.F.C.</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="objetivo.html">Objetivo</a>
+      <a href="salud.html">Salud</a>
+      <a href="fonoemergencias.html">Fono Emergencias</a>
+      <a href="tips.html">Tips S.O.S.</a>
+      <a href="radioaficion.html" class="active">R.A.</a>
+    </nav>
+    <nav>
+    <ul>
+      <li class="dropdown">
+        <div class="dropdown-button">Links ▾</div>
+        <div class="dropdown-content">
+          <a href="https://sismologia.cl/" target="_blank">Sismología</a>
+          <a href="https://senapred.cl/" target="_blank">SENAPRED</a>
+          <a href="https://www.cruzroja.cl/inicio/" target="_blank">Cruz Roja</a>
+          <a href="https://www.ce3ser.cl/" target="_blank">S.E.R. Chile</a>
+          <a href="https://www.sernageomin.cl/rnvv/" target="_blank">SERNAGEOMIN</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
+  <div class-container>
+    <section class="hero">
+        <h1 class="titulo-pagina">El Rincón del Radioaficionado</h1>
+    </section>
+
+    <div class="contenido-objetivo">
+
+        <article class="bloque-objetivo">
+            <h2>La Radioafición: De la Regulación Legal a la Respuesta Operativa en Emergencias</h2>
+            <p><strong>Introducción</strong></p>
+            <p>
+                La radioafición es una disciplina técnica, social y de servicio público que combina el estudio de las 
+                telecomunicaciones con la experimentación y el apoyo a la comunidad. Lejos de ser un pasatiempo obsoleto, la 
+                radioafición constituye un pilar estratégico en la infraestructura de telecomunicaciones a nivel global. 
+                Para operar de forma coordinada e interferir lo mínimo posible en otros servicios esenciales, esta actividad 
+                está estrictamente regulada. Este ensayo aborda la radioafición desde dos ángulos complementarios: en primera 
+                instancia, su marco normativo a nivel chileno e internacional; y en segunda instancia, su despliegue práctico en 
+                operaciones de enlace de emergencia, tomando como referencia el trabajo del <strong>CE3SER</strong> (Servicio de Emergencia de 
+                Radioaficionados de Chile).
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Parte I: Normativa Vigente de la Radioafición en Chile e Internacional</h2>
+            <p>
+                El uso del espectro radioeléctrico —un recurso natural, limitado y de dominio público— exige reglas claras para 
+                evitar interferencias perjudiciales y garantizar una convivencia armónica entre los servicios de 
+                radiocomunicación marítimos, aeronáuticos, comerciales, militares y de aficionados.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>1. Marco Internacional</h2>
+            <p>
+                A nivel global, la máxima autoridad en telecomunicaciones es la <strong>Unión Internacional de Telecomunicaciones (UIT),</strong>
+                un organismo especializado de las Naciones Unidas.
+            </p>
+            <li><strong>Reglamento de Radiocomunicaciones de la UIT:</strong> Define el Servicio de Radioaficionados y el 
+                        Servicio de Radioaficionados por Satélite (Artículo 1.56 y 1.57), asignando bandas de frecuencia 
+                        específicas para su uso experimental y sin fines de lucro.</li>
+            <li><strong>Artículo 25 del Reglamento de la UIT:</strong> Regula expresamente las condiciones de las estaciones de 
+                        aficionados, estableciendo requisitos técnicos, la verificación de competencias de los operadores y la 
+                        prohibición de transmitir mensajes con contenido comercial o cifrado que impida la fiscalización.</li>
+            <li><strong>Unión Internacional de Radioaficionados (IARU):</strong> Organismo no gubernamental que representa los 
+                        intereses de la radioafición ante la UIT y organiza la distribución armonizada de las frecuencias 
+                        (planes de banda) en las tres regiones del mundo (Chile pertenece a la Región 2).</li>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>2. Marco Nacional (Chile)</h2>
+            <p>
+                En Chile, la administración del espectro y la fiscalización del servicio están a cargo de la Subsecretaría de 
+                Telecomunicaciones (SUBTEL), dependiente del Ministerio de Transportes y Telecomunicaciones.
+            </p>
+            <li><strong>Ley General de Telecomunicaciones (Ley N° 18.168):</strong> Establece las bases legales de las 
+                        telecomunicaciones en el país y tipifica los delitos contra la infraestructura o las transmisiones no 
+                        autorizadas.</li>
+            <li><strong>Reglamento del Servicio de Radioaficionados (Resoluciones y Normativa SUBTEL):</strong> Regula la 
+                        obtención de licencias, los distintivos de llamada (prefijos como CE, CA, CD) y las categorías de 
+                        operador (Aspirante, Novicio, General y Superior).</li>
+            <li><strong>Condiciones Operativas:</strong> Para transmitir de manera legal, todo operador debe rendir un examen 
+                        técnico-reglamentario ante la SUBTEL y obtener una licencia oficial junto a su respectivo indicativo de 
+                        señal distintiva.</li>
+            <li><strong>Uso del Espectro en Emergencias:</strong> La normativa chilena consagra el derecho prioritario de las 
+                        comunicaciones de emergencia. Ante una declaración de catástrofe o emergencia, ciertas frecuencias de 
+                        radioaficionados quedan reservadas exclusivamente para la gestión del tráfico de socorro o apoyo civil.</li>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Parte II: Operaciones de Enlace de Emergencia y el Rol del CE3SER</h2>
+            <p>
+                Cuando la infraestructura pública convencional —redes celulares, internet, telefonía fija y suministro 
+                eléctrico— colapsa debido a desastres naturales (sismos, erupciones volcánicas, aluviones, incendios forestales) 
+                o eventos antrópicos, la radioafición se transforma en la<strong> última línea de defensa de las comunicaciones.</strong>
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>1. El Desafío de la Redundancia e Interoperabilidad</h2>
+            <p>
+                A diferencia de las redes comerciales, las estaciones de radioafición operan de forma descentralizada. Con 
+                equipos portátiles o de base alimentados por baterías, energía solar o generadores, un radioaficionado puede 
+                entablar comunicación directa (punto a punto) sin depender de repetidores intermedios ni de fibra óptica.
+            </p>
+            <p>
+               Además, desempeñan un papel crucial de<strong> interoperabilidad,</strong> conectando a distintos organismos de 
+               respuesta (Carabineros, Bomberos, SAMU, SENAPRED) que habitualmente operan en sistemas y frecuencias incompatibles 
+               entre sí.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>2. El Servicio de Emergencia de Radioaficionados de Chile (CE3SER)</h2>
+            <p>
+                El <strong> CE3SER</strong> es el Departamento de Servicio de Emergencia del<strong> Radio Club de Chile (CE3AA),</strong>
+                la entidad matriz de la radioafición en el país. Su misión principal es actuar como un canal de comunicaciones de 
+                respaldo al servicio de las autoridades, los primeros respondedores y la comunidad.
+            </p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Roles Fundamentales del CE3SER:</h2>
+            <li><strong>1. Apoyo a Autoridades:</strong> Facilita el enlace directo entre las zonas aisladas o afectadas y las 
+                        autoridades en los centros de mando.</li>
+            <li><strong>2. Enlace Comunitario:</strong> Transmite mensajes de bienestar (health and welfare traffic) para 
+                        informar a familias sobre el estado de sus seres queridos en zonas de desastre.</li>
+            <li><strong>3. Mantenimiento de Redes Activas:</strong> Para asegurar la operatividad ante un evento real, el CE3SER 
+                        mantiene mallas de entrenamiento y puntos de encuentro diarios y semanales en diversas bandas y modos:</li>
+            <li><strong>HF (Altas Frecuencias):</strong> Redes de cobertura nacional y regional como RECNA (7.190 MHz L-V) y 
+                        Chile Mar y Tierra (14.255 MHz L-D).</li>
+            <li><strong>VHF / UHF Simplex y Repetidores:</strong> Puntos de encuentro locales en 146.520 MHz (VHF) y 433.520 MHz (UHF).</li>
+            <li><strong>Redes Digitales:</strong> Integración de modos digitales como <strong>DMR</strong> (ID: 730911) y <strong>REDLA</strong>
+                        (ID: 97911), aprovechando la tecnología moderna para extender el alcance con claridad de audio.</li>
+        </article>
+
+        <article class="bloque-objetivo">
+            <h2>Protocolo Operativo en Catástrofes</h2>
+            <p>
+                En situaciones de crisis real, el CE3SER activa sus protocolos de <strong>EMCOM</strong> (Comunicaciones de 
+                Emergencia). Las frecuencias ordinarias se transforman en canales dirigidos por un Operador Control de Red 
+                (NCS - Net Control Station), quien coordina el tráfico de mensajes dando estricta prioridad a la información que 
+                comprometa la vida humana o la seguridad pública.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <h2>Conclusión</h2>
+            <p>
+                La radioafición no es únicamente una afición técnica; es un recurso estratégico regulado que aporta resiliencia a 
+                la sociedad. La solidez de la <strong>Parte I</strong> (el cumplimiento estricto de la normativa dictada por la 
+                UIT y la SUBTEL) garantiza que los radioaficionados operen con el rigor técnico y la disciplina necesarios en el 
+                espectro. Es precisamente esa preparación normativa y disciplinaria la que permite el éxito de la <strong>Parte II:</strong>
+                la capacidad de desplegar servicios como el <strong>CE3SER,</strong> capaces de mantener a un país comunicado 
+                cuando todos los demás sistemas han fallado. En un mundo crecientemente dependiente de infraestructuras digitales 
+                vulnerables, la radio de emergencia sigue siendo el respaldo más confiable.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A1.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>1912 - 1947 Los Pioneros y la Era de las Válvulas.</h2>
+            <p>
+                <strong>1912: El cominezo de la Regulación y la Chispa.</strong> Tras la tragedia del Titanic, la Ley de Radio de 
+                        1912 en EE. UU. exige licencias y asigna longitudes de onda cortas a los aficionados. Las primeras 
+                        estaciones usan transmisores de chispa (spark-gap), ruidosos e ineficientes.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A2.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>El Receptor de Cristal</h2>
+            <p>
+                <strong>1916: El Receptor de Cristal.</strong> Un hito de simplicidad. Los primeros aficionados construyen sus 
+                        propios receptores usando un cristal de galena (el primer "semiconductor") para detectar señales de 
+                        telegrafía inalámbrica.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A3.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>La Revolución de la Válvula (Tubo de Vacío)</h2>
+            <p>
+                <strong>1923: La Revolución de la Válvula (Tubo de Vacío).</strong> La introducción del triodo permite amplificar 
+                        señales y generar ondas continuas (CW), reemplazando la chispa y permitiendo comunicaciones mucho más 
+                        eficientes y de mayor alcance en HF.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A4.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Los Primeros Equipos Portátiles</h2>
+            <p>
+                <strong>1934: Los Primeros Equipos Portátiles (Field Day).</strong> Nace el concepto de operar fuera del "shack" (estudio). 
+                Se desarrollan los primeros transceptores portátiles en forma de maleta, impulsados por baterías, para demostrar 
+                la capacidad de comunicación en desastres.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A5.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>La Era de la Postguerra y Equipos Excedentes</h2>
+            <p>
+                <strong>1947: La Era de la Postguerra y Equipos Excedentes.</strong> Tras la Segunda Guerra Mundial, el mercado 
+                se llena de equipos militares excedentes (como los Collins), permitiendo a los aficionados acceder a tecnología 
+                avanzada y de alta calidad a bajo costo.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A6.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>1956 - 1979 Expansión de Modos y la Era Digital</h2>
+            <p>
+                <strong>1956: Antenas de Alta Ganancia.</strong> El desarrollo y la instalación de antenas directivas 
+                        (como las Yagi y cúbicas) en torres elevadas se vuelven populares para maximizar el alcance en las bandas 
+                        de HF, permitiendo contactos internacionales más fiables.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A7.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Introducción de la FM en VHF/UHF</h2>
+            <p>
+                <strong>1961: Introducción de la FM en VHF/UHF.</strong> La modulación en frecuencia (FM) y los primeros 
+                        transceptores portátiles de mano (handhelds) permiten comunicaciones locales claras y sencillas, 
+                        sentando las bases para las redes de repetidores.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A8.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Telegrafía Morse (CW) de Precisión</h2>
+            <p>
+                <strong>1966: Telegrafía Morse (CW) de Precisión.</strong> A pesar del avance de la voz, el CW sigue siendo 
+                        esencial. Se popularizan los manipulos telegráficos electrónicos y de precisión para transmisiones más 
+                        rápidas y limpias.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A9.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Radioaficionados en el Espacio</h2>
+            <p>
+                <strong>1974: Radioaficionados en el Espacio (AMSAT-OSCAR 7).</strong> El lanzamiento del OSCAR 7 es un hito: un 
+                        satélite diseñado y construido por radioaficionados que actúa como un repetidor en órbita, permitiendo 
+                        contactos a miles de kilómetros en VHF/UHF.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A10.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>La era del Tranceptor Moderno y Sólido</h2>
+            <p>
+                <strong>1979: La Era del La Era del Transceptor Moderno y Sólido.</strong> Equipos como el Kenwood TS-120S 
+                        introducen la tecnología de estado sólido (transistores en lugar de válvulas) y osciladores digitales 
+                        (VFO externos), haciendo los equipos más compactos, estables y fáciles de usar.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A11.png" alt="radio" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>1985 - 2007 La Era Digital y la Integración Informática</h2>
+            <p>
+                <strong>1985: Packet Radio y TNC.</strong> La radioafición se encuentra con la informática. Se desarrollan los 
+                        primeros módems de radio (TNC) y el protocolo AX.25, permitiendo el envío de paquetes de datos y texto 
+                        entre computadoras a través de la radio.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A12.png" alt="radio" class="imagen-objetivo">
+            <h2>Redes de Repetidores y Control</h2>
+            <p>
+                <strong>1991: Redes de Repetidores y Control.</strong> La infraestructura local se vuelve compleja. Se instalan 
+                        sistemas de control avanzados para redes de repetidores interconectados, expandiendo la cobertura local y
+                        regional.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A13.png" alt="radio" class="imagen-objetivo">
+            <h2>La Integración del PC</h2>
+            <p>
+                <strong>1996: La Integración del PC en el Shack.</strong> La computadora se vuelve central. Se utiliza para el 
+                        registro de contactos (logging), el control del transceptor y la decodificación de modos digitales, 
+                        creando estaciones de radio más eficientes.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A14.png" alt="radio" class="imagen-objetivo">
+            <h2>Comunicaciones EME</h2>
+            <p>
+                <strong>2002: Comunicaciones EME (Tierra-Luna-Tierra).</strong> Una de las disciplinas más desafiantes. Los 
+                        aficionados utilizan la Luna como un reflector pasivo para rebotar señales de VHF/UHF, requiriendo 
+                        antenas parabólicas gigantes y alta potencia.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A15.png" alt="radio" class="imagen-objetivo">
+            <h2>Operaciones Portátiles Modernas</h2>
+            <p>
+                <strong>2007: QRP y Operaciones Portátiles Modernas.</strong> El desarrollo de transceptores QRP (baja potencia) 
+                        ultracompactos y eficientes permite la activación de cimas (SOTA) y parques (POTA), combinando la radio 
+                        con el senderismo.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A16.jpg" alt="radio" class="imagen-objetivo">
+            <h2>2011 - Hoy Radio Definida por Software y Conectividad Global</h2>
+            <p>
+                <strong>2011: Radio Definida por Software (SDR) y Cascada.</strong> La mayor revolución moderna. El hardware se 
+                        simplifica y el procesamiento de señal se hace en el software. Aparece la visualización de "cascada" 
+                        (waterfall), permitiendo "ver" todo el espectro en tiempo real.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A17.jpg" alt="radio" class="imagen-objetivo">
+            <h2>Modos de Voz Digitales</h2>
+            <p>
+                <strong>2014: Modos de Voz Digitales (D-STAR, DMR).</strong> La voz se digitaliza. Protocolos como D-STAR y DMR 
+                        permiten comunicaciones de voz claras, sin ruido y con capacidad de enrutamiento global a través de 
+                        internet.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A18.jpg" alt="radio" class="imagen-objetivo">
+            <h2>SDR de Muestreo Directo</h2>
+            <p>
+                <strong>2016: SDR de Muestreo Directo y FPGAs.</strong> La tecnología SDR madura. Equipos como el Icom IC-7300 
+                        integran chips FPGA de alta velocidad que muestrean la señal de radio directamente desde la antena, 
+                        eliminando etapas de hardware tradicionales.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A19.jpg" alt="radio" class="imagen-objetivo">
+            <h2>Automatización de Datos</h2>
+            <p>
+                <strong>2018: FT8 y la Automatización de Datos.</strong> El modo digital FT8 revoluciona el HF. Permite contactos
+                        rápidos y exitosos en condiciones de propagación extremadamente baja, utilizando señales que son casi 
+                        inaudibles para el oído humano.
+            </p>
+        </article>
+        <article class="bloque-objetivo">
+            <img src="R.A20.jpg" alt="radio" class="imagen-objetivo">
+            <h2>La Estación Remota</h2>
+            <p>
+                <strong>2024: La Estación Remota e Inteligente.</strong> La era de la conectividad total. Los aficionados 
+                         pueden operar sus estaciones de radio complejas de forma remota desde un teléfono o tableta a través de 
+                         internet, utilizando interfaces de usuario táctiles e inteligentes.
+            </p>
+        </article>
+
+    </div>
+
+    <footer>
+    <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
+    <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
+    </footer>
+
+    <button id="btnSubir" onclick="subirArriba()">⬆</button>
+
+    <script>
+    // Botón subir
+    window.onscroll = function() {
+      let boton = document.getElementById("btnSubir");
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        boton.style.display = "block";
+      } else {
+        boton.style.display = "none";
+      }
+    };
+    function subirArriba() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+  </div>
+  </body>
+  </html>

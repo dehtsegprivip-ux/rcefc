@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teléfonos de Emergencia</title>
+   <link rel="icon" href="EFC.png" type="image/png">
+   <link rel="icon" type="image/x-icon" href="EFC-Actual.ico">
+  <meta name="theme-color" content="#00ff41">
+  <style>
+:root { 
+    --primary-color: #00ff41; 
+    --secondary-color: #00cc33; 
+    --info: #00bfff; 
+    --bg-dark: #0d1117; 
+    --bg-darker: #05080a; 
+    --bg-card: #161b22; 
+    --text-color: #e6edf3; 
+    --text-muted: #8b949e; 
+    --nav-bg: rgba(13,17,23,0.95); 
+}
+    .no-crop {
+      object-fit: contain !important;
+      background: #111;
+    }
+
+    /* Responsive y accesibilidad */
+    @media (max-width: 900px) {
+      .rain-side { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rain-side, .rain-track { animation: none !important; }
+    }
+
+   html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 100px; 
+}
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    font-family: 'Courier New', Courier, monospace; 
+}
+body { 
+      background-image: url(01.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+body::before { 
+    content: ""; 
+    position: fixed; 
+    inset: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-image: 
+    linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.35) ), 
+    url('RED EFC.jpg'); 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+    background-size: 100% 100%; 
+    z-index: -1; 
+}
+header { 
+    position: relative; 
+    width: 100%; 
+    background-color: var(--nav-bg); 
+    border-bottom: 1px solid var(--primary-color); 
+    z-index: 1000; 
+    padding: 1rem 5%; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    backdrop-filter: blur(5px); 
+}
+.logo-nav { 
+    font-size: 1.3rem; 
+    font-weight: bold; 
+    color: var(--primary-color); 
+    text-transform: uppercase; 
+    letter-spacing: 1px; 
+    text-decoration: none; 
+}
+.logo-nav:hover { 
+    text-shadow: 0 0 15px var(--primary-color); 
+}
+
+nav a { 
+    display: inline-block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: bold;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+  border-radius: 6px;
+}
+nav a:hover {
+  color: var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+}
+
+nav a.active {
+  color: var(--primary-color);
+  background: rgba(0,255,65,0.12);
+  border: 1px solid var(--primary-color);
+  text-shadow: 0 0 10px var(--primary-color);
+  box-shadow: 0 0 12px rgba(0,255,65,0.20);
+}
+
+nav ul { list-style: none; display: flex; gap: 15px; flex-wrap: wrap; }
+nav ul li a { text-decoration: none; color: var(--text-color); font-weight: bold; padding: 10px 12px; transition: all 0.3s; font-size: 0.9rem; }
+nav ul li a:hover { color: var(--primary-color); text-shadow: 0 0 10px var(--primary-color); }
+/* ========
+   DROPDOWN
+   ======== */
+.dropdown { position: relative; }
+.dropdown-button { color: var(--text-color); cursor: pointer; font-weight: bold; padding: 10px 12px; }
+.dropdown-button:hover { color: var(--primary-color); }
+.dropdown-content { display: none; position: absolute; background-color: var(--bg-darker); min-width: 250px; border: 1px solid var(--primary-color); z-index: 2000; top: 100%; right: 0; border-radius: 5px; }
+.dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(0,255,65,0.1); }
+.dropdown-content a:hover { background-color: rgba(0,255,65,0.1); color: var(--primary-color); }
+.dropdown:hover .dropdown-content { display: block; }
+/* ==========
+   CONTENEDOR
+   ========== */
+.container { min-height: calc(100vh - 80px); padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+.hero {
+  text-align: center;
+  padding: 45px 20px 30px;
+}
+.hero h1 { margin: 0 auto 28px; }
+.contenido-objetivo {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  gap: 22px;
+}
+.bloque-objetivo {
+  background: rgba(13, 17, 23, 0.94);
+  border: 1px solid rgba(0, 255, 65, 0.32);
+  border-left: 5px solid var(--primary-color);
+  border-radius: 12px;
+  padding: 25px 30px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  text-align: left;
+  backdrop-filter: blur(4px);
+}
+.bloque-objetivo h2 {
+  margin: 0 0 14px;
+  color: var(--primary-color);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.35;
+  text-shadow: 0 0 8px rgba(0, 255, 65, 0.25);
+}
+.bloque-objetivo p {
+  margin: 0;
+  color: #f1f5f9;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.75;
+  letter-spacing: 0.01em;
+}
+
+    .botones {
+      margin-top: 30px;
+    }
+
+    .botones a {
+      display: inline-block;
+      margin: 10px;
+      padding: 15px 25px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      color: white;
+    }
+    .botones a:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
+
+    .seccion {
+      padding: 40px 20px;
+      text-align: center;
+    }
+
+    .seccion h3 { color: #333333; }
+    .seccion p {
+      max-width: 700px;
+      margin: auto;
+      color: #666;
+    }
+    .titulo-seccion {
+      background: #33333374;
+      font-size: 28px;
+      color: rgb(221, 245, 6);
+      margin: 40px 0 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .titulo-seccion::after {
+      content: "";
+      width: 80px;
+      height: 4px;
+      background: #4facfe;
+      display: block;
+      margin: 10px auto 0;
+      border-radius: 5px;
+    }
+
+    .titulo-pagina {
+  display: inline-block;
+  margin: 0 0 20px;
+  padding: 12px 22px;
+  color: #ffffff;
+  background: rgba(5, 8, 10, 0.92);
+  border: 1px solid rgba(0, 255, 65, 0.5);
+  border-radius: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  text-shadow: 0 0 10px rgba(0, 255, 65, 0.35);
+}
+.titulo-pagina::after {
+  content: "";
+  width: 80px;
+  height: 4px;
+  background: var(--info);
+  display: block;
+  margin: 10px auto 0;
+  border-radius: 5px;
+}
+
+.bloque-objetivo .imagen-objetivo {
+  float: right;            /* Mueve la imagen a la derecha */
+  margin-right: 20px;     /* Espacio para que el texto no toque la imagen */
+  margin-bottom: 10px;    /* Espacio inferior */
+  max-width: 200px;
+  height: auto;
+}
+
+/* Limpia el float para evitar desbordamientos del article */
+.bloque-objetivo::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+    #btnSubir {
+      backdrop-filter: blur(5px);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #6e0b0b;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    #btnSubir:hover {
+      background: #007bff;
+      transform: scale(1.1);
+    }
+/* ======
+   FOOTER
+   ====== */
+footer { 
+    background-color: var(--bg-darker); 
+    border-top: 2px solid var(--primary-color); 
+    padding: 40px 5% 20px; 
+    margin-top: 40px; 
+}
+.footer-bottom { 
+    text-align: center; 
+    font-size: 0.85rem; 
+    color: var(--text-muted); 
+}
+/* =========
+   CELULARES
+   ========= */
+@media (max-width:768px) { header { flex-direction: column; gap: 15px; text-align: center; }
+.logo-nav { font-size: 1rem; }
+#map { height: 500px; }
+.map-legend { flex-direction: column; gap: 10px; } }
+</style>
+</head>
+
+<body>
+  <header>
+    <a href="index.html" class="logo-nav">Red Ciudadana E.F.C.</a>
+    <nav>
+      <a href="index.html">Inicio</a>
+      <a href="nosotros.html">Nosotros</a>
+      <a href="objetivo.html">Objetivo</a>
+      <a href="salud.html">Salud</a>
+      <a href="fonoemergencias.html" class="active">Fono Emergencias</a>
+      <a href="tips.html">Tips S.O.S.</a>
+      <a href="radioaficion.html">R.A.</a>
+    </nav>
+    <nav>
+    <ul>
+      <li class="dropdown">
+        <div class="dropdown-button">Links ▾</div>
+        <div class="dropdown-content">
+          <a href="https://sismologia.cl/" target="_blank">Sismología</a>
+          <a href="https://senapred.cl/" target="_blank">SENAPRED</a>
+          <a href="https://www.cruzroja.cl/inicio/" target="_blank">Cruz Roja</a>
+          <a href="https://www.ce3ser.cl/" target="_blank">S.E.R. Chile</a>
+          <a href="https://www.sernageomin.cl/rnvv/" target="_blank">SERNAGEOMIN</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+  </header>
+
+  <div class="container">
+    <section class="hero">
+      <h1 class="titulo-pagina">Teléfonos de Emergencia</h1>
+    </section>
+
+    <div class="contenido-objetivo">
+
+        <article class="bloque-objetivo">
+            <img src="Ambulancia.jpg" alt="Ambulancia" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+          <h2>Nacional</h2>
+          <p>CONAF: 130</p>
+          <p>SAMU: 131</p>
+          <p>Bomberos: 132</p>
+          <p>Carabineros: 133</p>
+          <p>PDI: 134</p>
+          <p>Fono Drogas: 135</p>
+          <p>Socorro Andino: 136</p>
+          <p>Emergencias Marítimas: 137</p>
+          <p>Búsqueda y Salvamento Aéreo: 138</p>
+          <p>Información Policial: 139</p>
+          <p>Fono Familia: 147</p>
+          <p>Emergencias Metrogas: 1442</p>
+          <p>ACHS: 1404</p>
+          <p>Fono drogas y alcohol SENDA: 1412</p>
+          <p>Cruz Roja Chilena: +56 2 2 777-1448</p>
+          <p>Fono SIDA: 800-202120</p>
+          <p>V.I.F.: 1455</p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="carabineros-camioneta.jpg" alt="carabineros" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Zona Norte</h2>
+            <p>Coquimbo Seguridad ciudadana: 1420</p>
+            <p>Vicuña Seguridad ciudadana: 1429</p>
+            <p>La Serena Seguridad ciudadana: 1457</p>
+            <p>Zapallar Seguridad Ciudadana: 1408</p>
+            <p>Viña del Mar Seguridad ciudadana: 1423</p>
+        </article>
+
+        <article class="bloque-objetivo">
+            <img src="Bomberos.jpeg" alt="Bomberos" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+            <h2>Zona Centro</h2>
+            <p>Región Metropolitana, Fono Acción: 143</p>
+            <p>Las Condes Seguridad Ciudadana: 1402</p>
+            <p>Vitacura Seguridad Ciudadana: 1403</p>
+            <p>Lo Barnechea Seguridad Ciudadana: 1405</p>
+            <p>Santiago Seguridad Ciudadana: 1406</p>
+            <p>Mutual de Seguridad: 1407</p>
+            <p>Peñaflor Seguridad Ciudadana: 1410</p>
+            <p>Emergencias Metro de Santiago: 1411</p>
+            <p>Talagante Seguridad ciudadana: 1413</p>
+            <p>Providencia Seguridad ciudadana: 1414</p>
+            <p>El Quisco Seguridad ciudadana: 1415</p>
+            <p>La Florida Seguridad ciudadana: 1416</p>
+            <p>Huechuraba Seguridad ciudadana: 1417</p>
+            <p>Maipú Seguridad ciudadana: 1418</p>
+            <p>La Reina Seguridad ciudadana: 1419</p>
+            <p>Lampa Seguridad ciudadana: 1421</p>
+            <p>Conchalí Seguridad ciudadana: 1425</p>
+            <p>Buin Seguridad ciudadana: 1426</p>
+            <p>Recoleta Seguridad ciudadana: 1440</p>
+            <p>La Pintana Seguridad ciudadana: 1441</p>
+            <p>Macul Seguridad ciudadana: 1444</p>
+            <p>Ñuñoa Seguridad ciudadana: 1445</p>
+            <p>La Granja Seguridad ciudadana: 1446</p>
+            <p>Melipilla Seguridad ciudadana: 1452</p>
+            <p>Padre Hurtado Seguridad ciudadana: 1449</p>
+            <p>Renca Seguridad ciudadana: 1453</p>
+            <p>San Miguel Seguridad ciudadana: 1456</p>
+            <p>Cerro Navia Seguridad ciudadana: 1460</p>
+            <p>Peñalolén Seguridad ciudadana: 1461</p>
+            <p>Parque Metropolitano de Santiago: 1466</p>
+            <p>Metro de Santiago: 1488</p>
+            </article>
+
+            <article class="bloque-objetivo">
+                <img src="PDI.jpg" alt="PDI" class="imagen-objetivo">
+            <div class="contenido-texto"></div>
+                <h2>Zona Sur</h2>
+                <p>Santa María Seguridad ciudadana: 1447</p>
+                <p>Machalí Seguridad ciudadana: 1443</p>
+                <p>Pichilemu Seguridad ciudadana: 1450</p>
+                <p>Santo Domingo Seguridad ciudadana: 1458</p>
+                <p>Limache Seguridad ciudadana: 1459</p>
+                <p>Molina Seguridad ciudadana: 1462</p>
+                <p>Parral Seguridad ciudadana: 1424</p>
+                <p>Temuco Seguridad Ciudadana: 1409</p>
+                <p>Panguipulli Seguridad ciudadana: 1454</p>
+                <p>Pucón Seguridad ciudadana: 1448</p>
+                <p>Valdivia Seguridad ciudadana: 1451</p>
+                <p>Puerto Montt Botes Salvavidas: 1400</p>
+                <p>Castro Seguridad ciudadana: 1427</p>
+                <p>Dalcahue Seguridad ciudadana: 1428</p>
+          </article>
+          </div>
+          
+  <footer>
+    <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
+    <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
+  </footer>
+
+  <button id="btnSubir" onclick="subirArriba()">⬆</button>
+
+  <script>
+    // Botón subir
+    window.onscroll = function() {
+      let boton = document.getElementById("btnSubir");
+      if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+        boton.style.display = "block";
+      } else {
+        boton.style.display = "none";
+      }
+    };
+    function subirArriba() {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+  </div>
+  </body>
+  </html>

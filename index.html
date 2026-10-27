@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Red Ciudadana Emergencias Fénix Chile</title>
+  <link rel="icon" href="EFC.png" type="image/png">
+  <link rel="icon" type="image/x-icon" href="EFC-Actual.ico">
+  <meta name="theme-color" content="#00ff41">
+  <meta name="referrer" content="no-referrer-when-downgrade">
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    :root { 
+      --primary-color: #00ff41; 
+      --secondary-color: #00cc33; 
+      --info: #00bfff; 
+      --bg-dark: #0d1117; 
+      --bg-darker: #05080a; 
+      --bg-card: #161b22; 
+      --text-color: #e6edf3; 
+      --text-muted: #8b949e; 
+      --nav-bg: rgba(13,17,23,0.95); 
+    }
+    
+    .no-crop {
+      object-fit: contain !important;
+      background: #111;
+    }
+
+    @media (max-width: 900px) {
+      .rain-side { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .rain-side, .rain-track { animation: none !important; }
+    }
+
+    html { 
+      scroll-behavior: smooth; 
+      scroll-padding-top: 100px; 
+    }
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box; 
+      font-family: 'Courier New', Courier, monospace; 
+    }
+    body { 
+      background-image: url(01.png);
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    body::before { 
+      content: ""; 
+      position: fixed; 
+      inset: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-image: 
+      linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.35) ), 
+      url('RED EFC.jpg'); 
+      background-repeat: no-repeat; 
+      background-position: center center; 
+      background-size: 100% 100%; 
+      z-index: -1; 
+    }
+    header { 
+      position: relative; 
+      width: 100%; 
+      background-color: var(--nav-bg); 
+      border-bottom: 1px solid var(--primary-color); 
+      z-index: 1000; 
+      padding: 1rem 5%; 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      backdrop-filter: blur(5px); 
+    }
+    .logo-nav { 
+      font-size: 1.3rem; 
+      font-weight: bold; 
+      color: var(--primary-color); 
+      text-transform: uppercase; 
+      letter-spacing: 1px; 
+      text-decoration: none; 
+    }
+    .logo-nav:hover { 
+      text-shadow: 0 0 15px var(--primary-color); 
+    }
+    nav a { padding: 10px 12px; text-decoration: none; color: var(--text-color); font-weight: bold; transition: all 0.3s; font-size: 0.9rem; }
+    nav ul { list-style: none; display: flex; gap: 15px; flex-wrap: wrap; }
+    nav ul li a { text-decoration: none; color: var(--text-color); font-weight: bold; padding: 10px 12px; transition: all 0.3s; font-size: 0.9rem; }
+    nav ul li a:hover,
+    nav a:hover {
+      color: var(--primary-color);
+      text-shadow: 0 0 10px var(--primary-color);
+    }
+    nav a.active {
+      color: var(--primary-color);
+      background-color: rgba(0, 255, 65, 0.10);
+      border: 1px solid rgba(0, 255, 65, 0.45);
+      border-radius: 6px;
+      text-shadow: 0 0 10px var(--primary-color);
+      box-shadow: 0 0 12px rgba(0, 255, 65, 0.15);
+    }
+    nav a {
+      display: inline-block;
+    }
+
+    /* DROPDOWN */
+    .dropdown { position: relative; }
+    .dropdown-button { color: var(--text-color); cursor: pointer; font-weight: bold; padding: 10px 12px; }
+    .dropdown-button:hover { color: var(--primary-color); }
+    .dropdown-content { display: none; position: absolute; background-color: var(--bg-darker); min-width: 250px; border: 1px solid var(--primary-color); z-index: 2000; top: 100%; right: 0; border-radius: 5px; }
+    .dropdown-content a { color: var(--text-color); padding: 12px 16px; text-decoration: none; display: block; border-bottom: 1px solid rgba(0,255,65,0.1); }
+    .dropdown-content a:hover { background-color: rgba(0,255,65,0.1); color: var(--primary-color); }
+    .dropdown:hover .dropdown-content { display: block; }
+
+    /* CONTENEDOR PRINCIPAL */
+    .container { min-height: calc(100vh - 80px); padding: 40px 5%; max-width: 1400px; margin: 0 auto; width: 100%; }
+
+    /* TÍTULO DE SECCIÓN */
+    .map-header { background: rgba(5,8,10,0.90); border: 1px solid var(--primary-color); border-radius: 10px; padding: 10px 15px; margin-bottom: 20px; width: fit-content; box-shadow: 0 0 20px rgba(0,255,65,0.12); }
+    .map-header h1 { color: var(--primary-color); margin-bottom: 8px; font-size: 1.0rem; }
+    .map-header p { color: var(--text-muted); line-height: 1.6; font-size: 0.9rem; }
+
+    /* ========================================================
+       PANEL DE MONITOREO (FLEXBOX 50/50 - ALTURA FIJA 600px)
+       ======================================================== */
+    .panel-monitoreo {
+      display: flex;
+      gap: 20px;
+      width: 100%;
+      height: 600px;
+      margin: 30px 0;
+    }
+
+    .panel-mapa, .panel-tabla {
+      flex: 0 0 calc(50% - 10px);
+      height: 100%;
+      background: rgba(5, 8, 10, 0.90);
+      border: 2px solid var(--primary-color);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 255, 65, 0.15);
+    }
+
+    .panel-titulo {
+      background: rgba(0, 255, 65, 0.1);
+      color: var(--primary-color);
+      padding: 10px 15px;
+      font-weight: bold;
+      border-bottom: 1px solid var(--primary-color);
+      font-size: 0.95rem;
+      text-transform: uppercase;
+    }
+
+    #map { 
+      width: 100%; 
+      height: calc(100% - 41px); 
+      border: none; 
+      border-radius: 0;
+      box-shadow: none; 
+    }
+
+    /* CONTENEDOR CON SCROLL PARA LA TABLA */
+    .tabla-scroll-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+    }
+
+    .tabla-scroll-container table {
+      width: 100%;
+      border-collapse: collapse;
+      color: var(--text-color);
+      font-size: 0.85rem;
+    }
+
+    .tabla-scroll-container th,
+    .tabla-scroll-container td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+    }
+
+    .tabla-scroll-container th {
+      background: rgba(0, 255, 65, 0.15);
+      color: var(--primary-color);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .tabla-scroll-container tr:hover {
+      background: rgba(0, 255, 65, 0.05);
+    }
+    
+    /* ========================================================
+       CONTENEDOR INDEPENDIENTE PARA EL BOTÓN DE WHATSAPP
+       ======================================================== */
+    .whatsapp-container-externo {
+      display: flex;
+      justify-content: flex-end; /* Lo alinea totalmente a la derecha */
+      margin-bottom: 15px;
+      width: 100%;
+    }
+
+    .whatsapp-btn-independiente {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(5, 8, 10, 0.90);
+      border: 1px solid var(--primary-color);
+      padding: 8px 16px;
+      border-radius: 8px;
+      color: var(--text-color);
+      text-decoration: none;
+      font-size: 0.85rem;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-btn-independiente:hover {
+      background: rgba(0, 255, 65, 0.15);
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.3);
+      transform: scale(1.02);
+      color: var(--primary-color);
+    }
+
+    .whatsapp-logo-sm {
+      width: 24px;
+      height: 24px;
+      object-fit: contain;
+    }
+
+    #btnSubir {
+      backdrop-filter: blur(5px);
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #6e0b0b;
+      color: white;
+      border: none;
+      padding: 12px 15px;
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: 0.3s;
+      z-index: 100;
+    }
+
+    #btnSubir:hover {
+      background: #007bff;
+      transform: scale(1.1);
+    }
+
+    /* FOOTER */
+    footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
+    .footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+
+    /* RESPONSIVE MÓVIL */
+    @media (max-width: 900px) { 
+      header { flex-direction: column; gap: 15px; text-align: center; }
+      .logo-nav { font-size: 1rem; }
+      .panel-monitoreo {
+        flex-direction: column;
+        height: auto;
+      }
+      .panel-mapa, .panel-tabla {
+        flex: 0 0 100%;
+        height: 450px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a class="logo-nav" href="index.html">Red Ciudadana E.F.C.</a>
+  <nav aria-label="Navegación principal">    
+    <a href="index.html">Inicio</a>
+    <a href="nosotros.html">Nosotros</a>
+    <a href="objetivo.html">Objetivo</a>
+    <a href="salud.html">Salud</a>
+    <a href="fonoemergencias.html">Fono Emergencias</a>
+    <a href="tips.html">Tips S.O.S.</a>
+    <a href="radioaficion.html">R.A.</a>
+  </nav>
+  <nav>
+    <ul>
+      <li class="dropdown">
+        <div class="dropdown-button">Links ▾</div>
+        <div class="dropdown-content">
+          <a href="https://sismologia.cl/" target="_blank">Sismología</a>
+          <a href="https://senapred.cl/" target="_blank">SENAPRED</a>
+          <a href="https://www.cruzroja.cl/inicio/" target="_blank">Cruz Roja</a>
+          <a href="https://www.ce3ser.cl/" target="_blank">S.E.R. Chile</a>
+          <a href="https://www.sernageomin.cl/rnvv/" target="_blank">SERNAGEOMIN</a>
+        </div>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="map-header">
+    <h1>🛰️ Panel de Monitoreo Operacional y Sismológico</h1>  
+    <p>Visualización en tiempo real de integrantes, haz click en marcadores azules del mapa.</p>
+  </section>
+
+  <!-- 2. BOTÓN DE WHATSAPP INDEPENDIENTE (Fácil de mover a donde quieras) -->
+  <div class="whatsapp-container-externo">
+    <a href="https://chat.whatsapp.com/Cf0QpVxOzdTDUNggHapdyU" target="_blank" class="whatsapp-btn-independiente" title="Unirse al grupo de WhatsApp">
+      <span>Unirse al Grupo WhatsApp</span>
+      <img src="WhatsApp-logo.png" alt="Logo WhatsApp" class="whatsapp-logo-sm">
+    </a>
+  </div>
+              
+  <!-- CONTENEDOR FLEXBOX: MAPA A LA IZQUIERDA, TABLA DE SISMOS A LA DERECHA -->
+  <section class="panel-monitoreo">
+    <!-- MAPA OPERACIONAL -->
+    <div class="panel-mapa">
+      <div class="panel-titulo">🗺️ Mapa Operacional de Integrantes</div>
+      <div id="map"></div>
+    </div>
+
+    <!-- TABLA DE SISMOS EN TIEMPO REAL -->
+    <div class="panel-tabla">
+      <div class="panel-titulo">📊 Últimos Sismos</div>
+      <div class="tabla-scroll-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Mag.</th>
+              <th>Prof.</th>
+              <th>Referencia Geográfica</th>
+            </tr>
+          </thead>
+          <tbody id="sismos-tbody">
+            <tr>
+              <td colspan="4" style="text-align:center; color: var(--text-muted);">Cargando sismos...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
+  <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
+</footer>
+
+<button id="btnSubir" onclick="subirArriba()">⬆</button>
+
+<!-- SCRIPTS -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDTxUtqXNOJnRaevn06x4VaBO_YSL32FNQ",
+    authDomain: "fundacionpositiva-45a7c.firebaseapp.com",
+    projectId: "fundacionpositiva-45a7c",
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  
+  // Inicialización del Mapa
+  const map = L.map('map').setView([-33.45, -70.66], 4);
+
+  L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
+    maxZoom: 20,
+    attribution: '&copy; OpenStreetMap France | &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  }).addTo(map);
+
+  async function cargarIntegrantes() {
+    try {
+      const snapshot = await getDocs(collection(db, "personas"));
+      snapshot.forEach(doc => {
+        const p = doc.data();
+        if (p.lat && p.lng) {
+          L.marker([p.lat, p.lng])
+            .addTo(map)
+            .bindPopup(`
+              <div style="text-align:center; max-width:200px;">
+                ${p.foto ? `<img src="${p.foto}" width="100" style="border-radius:8px;"><br>` : ""}
+                <b>${p.nombre} ${p.apellido}</b><br>
+                ${p.ocupacion ? p.ocupacion + "<br>" : ""}
+                ${p.localidad}<br>
+                ${p.region}
+              </div>
+            `);
+        }
+      });
+    } catch (error) {
+      console.error("Error al cargar integrantes de Firebase:", error);
+    }
+  }
+  cargarIntegrantes();
+</script>  
+
+<script>
+  // ==========================================
+  // LÓGICA DE SISMOS (GAEL CLOUD API + AJAX)
+  // ==========================================
+  function cargarSismos() {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", "https://api.gael.cloud/general/public/sismos", true);
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          try {
+            const sismos = JSON.parse(xhr.responseText);
+            const tbody = document.getElementById("sismos-tbody");
+            if (!tbody) return;
+            
+            tbody.innerHTML = "";
+            sismos.forEach(s => {
+              const tr = document.createElement("tr");
+              tr.innerHTML = `
+                <td>${s.Fecha}</td>
+                <td><b>${s.Magnitud}</b></td>
+                <td>${s.Profundidad} km</td>
+                <td>${s.RefGeografica}</td>
+              `;
+              tbody.appendChild(tr);
+            });
+          } catch (e) {
+            console.error("Error al parsear el JSON de sismos:", e);
+          }
+        } else {
+          console.error("Error al conectar con la API de Gael Cloud. Estado:", xhr.status);
+        }
+      }
+    };
+    xhr.send();
+  }
+
+  // Carga inicial y actualización automática cada 60 segundos
+  cargarSismos();
+  setInterval(cargarSismos, 60000);
+
+  // Funciones de utilidad y accesibilidad
+  let hablando = false;
+  function leerTexto() {
+    if (hablando) return;
+    const texto = document.body.innerText;
+    const speech = new SpeechSynthesisUtterance(texto);
+    speech.lang = "es-CL";
+    hablando = true;
+    speech.onend = () => hablando = false;
+    window.speechSynthesis.speak(speech);
+  }
+  function detenerLectura() {
+    window.speechSynthesis.cancel();
+    hablando = false;
+  }
+
+  // Botón subir
+  window.onscroll = function() {
+    let boton = document.getElementById("btnSubir");
+    if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+      boton.style.display = "block";
+    } else {
+      boton.style.display = "none";
+    }
+  };
+  function subirArriba() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  // Destacar automáticamente la página actual en el menú
+  document.querySelectorAll('nav a[href]').forEach(enlace => {
+    const paginaActual = window.location.pathname.split('/').pop() || 'index.html';
+    const paginaEnlace = enlace.getAttribute('href').split('/').pop();
+
+    if (paginaActual === paginaEnlace) {
+      enlace.classList.add('active');
+      enlace.setAttribute('aria-current', 'page');
+    }
+  });
+ 
+</script>
+</body>
+</html>
