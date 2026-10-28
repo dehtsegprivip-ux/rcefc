@@ -212,6 +212,30 @@
       transform: scale(1.1);
     }
 
+    /* Contador de Visitas */
+    .contador-visitas-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px 0;
+    }
+    .contador-visitas {
+      background: rgba(5, 8, 10, 0.90);
+      border: 1px solid rgba(0, 255, 65, 0.35);
+      border-radius: 8px;
+      padding: 10px 20px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-color);
+      font-size: 0.9rem;
+      box-shadow: 0 0 15px rgba(0, 255, 65, 0.1);
+    }
+    .contador-visitas strong {
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+    }
+
     /* FOOTER */
     footer { background-color: var(--bg-darker); border-top: 2px solid var(--primary-color); padding: 40px 5% 20px; margin-top: 40px; }
     .footer-bottom { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
@@ -280,6 +304,14 @@
   </section>
 </main>
 
+  <!-- Contador de Visitas -->
+<div class="contador-visitas-container">
+  <div class="contador-visitas">
+    <span>👁️ Visitas Totales:</span>
+    <strong id="contador-visitas-num">150</strong>
+  </div>
+</div>
+
 <footer>
   <div class="footer-bottom">© 2026 <strong>Red Ciudadana Emergencias Fénix Chile</strong> sin fines de lucro
   <p>Creado por <strong>© Código 404 Ciberseguridad</strong></p></div>
@@ -290,7 +322,7 @@
 <!-- SCRIPTS -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, doc, getDoc, setDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
   const firebaseConfig = {
     apiKey: "AIzaSyDTxUtqXNOJnRaevn06x4VaBO_YSL32FNQ",
@@ -337,6 +369,31 @@
     }
   }
   cargarIntegrantes();
+
+// ==========================================
+  // LÓGICA DEL CONTADOR DE VISITAS EN FIREBASE
+  // ==========================================
+  async function gestionarContadorVisitas() {
+    try {
+      // Apunta a una colección llamada "config" y un documento llamado "visitas"
+      const visRef = doc(db, "config", "visitas");
+      const visDoc = await getDoc(visRef);
+
+      if (visDoc.exists()) {
+        // Si el documento ya existe, incrementa en 1
+        await updateDoc(visRef, { total: increment(1) });
+        document.getElementById("contador-visitas-num").innerText = visDoc.data().total + 1;
+      } else {
+        // Si no existe (primera vez que se ejecuta), lo crea con valor 1
+        await setDoc(visRef, { total: 1 });
+        document.getElementById("contador-visitas-num").innerText = 1;
+      }
+    } catch (error) {
+      console.error("Error al gestionar el contador de visitas:", error);
+      document.getElementById("contador-visitas-num").innerText = "N/D";
+    }
+  }
+  gestionarContadorVisitas();  
 </script>  
 
 <script>
